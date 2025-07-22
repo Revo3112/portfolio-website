@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Calendar, MapPin, Briefcase } from "lucide-react";
+import ScrollReveal from "./ScrollReveal";
 
 const WorkExperience = () => {
   const ref = useRef(null);
@@ -82,11 +83,10 @@ const WorkExperience = () => {
           <div className="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 w-1 h-full bg-gradient-to-b from-purple-500 to-cyan-500"></div>
 
           {experiences.map((exp, index) => (
-            <motion.div
+            <ScrollReveal
               key={index}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
+              direction={index % 2 === 0 ? "left" : "right"}
+              delay={index * 200}
               className={`relative flex items-center mb-12 ${
                 index % 2 === 0 ? "md:justify-start" : "md:justify-end"
               }`}
@@ -96,10 +96,10 @@ const WorkExperience = () => {
 
               {/* Content card */}
               <motion.div
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.02, y: -5 }}
                 className={`glass-effect rounded-2xl p-6 ml-16 md:ml-0 ${
                   index % 2 === 0 ? "md:mr-auto md:ml-8" : "md:ml-auto md:mr-8"
-                } max-w-xl hover-glow`}
+                } max-w-xl hover-glow cursor-interactive`}
               >
                 <div className={`h-1 w-20 bg-gradient-to-r ${exp.color} mb-4 rounded-full`}></div>
 
@@ -126,7 +126,7 @@ const WorkExperience = () => {
                   ))}
                 </ul>
               </motion.div>
-            </motion.div>
+            </ScrollReveal>
           ))}
         </div>
       </div>

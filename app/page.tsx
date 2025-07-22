@@ -8,6 +8,10 @@ import WorkExperience from "./components/WorkExperience";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
+import CursorBlob from "./components/CursorBlob";
+import ScrollProgress from "./components/ScrollProgress";
+import LoadingScreen from "./components/LoadingScreen";
+import PerformanceOptimizer from "./components/PerformanceOptimizer";
 
 // Dynamically import ThreeBackground to avoid SSR issues
 const ThreeBackground = dynamic(() => import("./components/ThreeBackground"), {
@@ -16,17 +20,36 @@ const ThreeBackground = dynamic(() => import("./components/ThreeBackground"), {
 
 export default function Home() {
   return (
-    <>
-      <ThreeBackground />
-      <Navigation />
-      <main className="relative z-10">
-        <Hero />
-        <Overview />
-        <WorkExperience />
-        <Skills />
-        <Projects />
-        <Contact />
-      </main>
-    </>
+    <div className="relative min-h-screen overflow-x-hidden">
+      {/* Loading Screen */}
+      <LoadingScreen />
+
+      <PerformanceOptimizer>
+        {/* Scroll Progress Bar */}
+        <ScrollProgress />
+
+        {/* Cursor Blob Effect */}
+        <CursorBlob />
+
+        {/* Minimalist 3D Background */}
+        <ThreeBackground />
+
+        {/* Subtle gradient overlay */}
+        <div className="fixed inset-0 bg-gradient-to-br from-background/80 via-transparent to-background-secondary/60 pointer-events-none z-0" />
+
+        {/* Navigation */}
+        <Navigation />
+
+        {/* Main Content */}
+        <main className="relative z-10">
+          <Hero />
+          <Overview />
+          <WorkExperience />
+          <Skills />
+          <Projects />
+          <Contact />
+        </main>
+      </PerformanceOptimizer>
+    </div>
   );
 }

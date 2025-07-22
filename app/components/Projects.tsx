@@ -143,7 +143,7 @@ const Projects = () => {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 border border-purple-500/30 rounded-lg text-gray-300 hover:text-white hover:border-purple-400/50 transition-all duration-300"
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 border border-purple-500/30 rounded-lg text-gray-300 hover:text-white hover:border-purple-400/50 transition-all duration-300 cursor-interactive"
                   >
                     <Github className="w-4 h-4" />
                     View Code

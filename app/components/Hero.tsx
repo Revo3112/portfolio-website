@@ -7,7 +7,7 @@ import { ChevronDown } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="min-h-screen flex items-center justify-center relative pt-20">
+    <section id="hero" className="min-h-screen flex items-center justify-center relative pt-20 gpu-optimized">
       <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
         {/* Text Content */}
         <motion.div
@@ -22,7 +22,7 @@ const Hero = () => {
             transition={{ delay: 0.2 }}
             className="mb-6"
           >
-            <h1 className="text-5xl md:text-7xl font-bold mb-4">
+            <h1 className="text-5xl md:text-7xl font-bold mb-4 text-shadow">
               Hi, I'm{" "}
               <span className="gradient-text">Revo Rahmat</span>
             </h1>
@@ -36,19 +36,19 @@ const Hero = () => {
           >
             <TypeAnimation
               sequence={[
-                "I develop AI-powered voice note applications", // EchoScribe AI
+                "Full-Stack Developer",
                 2000,
-                "I create blockchain educational platforms", // EduVerse
+                "AI & Machine Learning Engineer",
                 2000,
-                "I build intelligent pet care solutions", // PetCare Assistant
+                "Blockchain Developer",
                 2000,
-                "I design financial management systems", // Celengan
+                "Database Optimization Expert",
                 2000,
-                "I develop environmental monitoring apps", // PetaSampah
+                "Embedded Systems Developer",
                 2000,
-                "I create AR/VR mobile experiences", // Cloud-HorizonOS
+                "BASIC Community Founder",
                 2000,
-                "I build interactive language learning platforms", // DuaHasa
+                "PKM-KC VISTA Creator",
                 2000,
               ]}
               wrapper="p"
@@ -64,10 +64,10 @@ const Hero = () => {
             transition={{ delay: 0.6 }}
             className="text-gray-400 mb-8 max-w-lg mx-auto md:mx-0"
           >
-            Full-Stack Developer specializing in AI/ML, blockchain, and mobile development.
-            Creator of innovative solutions like EchoScribe AI, PetCare Assistant, EduVerse,
-            and Celengan financial app. Passionate about building intelligent applications
-            that solve real-world problems.
+            Full-Stack Developer skilled in React, Laravel, Python, SQL, and JavaScript.
+            Improved database performance by 25% and impact analysis accuracy by 90% using LLMs.
+            Mentored 40+ students, with 80% securing tech roles. Founded BASIC, organizing blockchain hackathons.
+            Secured PKM-KC funding for VISTA, an AI-driven object-tracking system with 95% precision.
           </motion.p>
 
           <motion.div
@@ -80,7 +80,7 @@ const Hero = () => {
               href="#contact"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-full font-medium hover:shadow-lg hover:shadow-purple-500/25 transition-shadow duration-300"
+              className="px-8 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-full font-medium hover:shadow-lg hover:shadow-purple-500/25 transition-shadow duration-300 cursor-interactive"
             >
               Get In Touch
             </motion.a>
@@ -88,7 +88,7 @@ const Hero = () => {
               href="#projects"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 border border-purple-500 text-purple-400 rounded-full font-medium hover:bg-purple-500/10 transition-colors duration-300"
+              className="px-8 py-3 border border-purple-500 text-purple-400 rounded-full font-medium hover:bg-purple-500/10 transition-colors duration-300 cursor-interactive"
             >
               View Projects
             </motion.a>
