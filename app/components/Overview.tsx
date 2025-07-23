@@ -25,7 +25,7 @@ const Overview = () => {
     },
     {
       icon: <Rocket className="w-8 h-8" />,
-      title: "Blockchain Developer",
+      title: "Blockchain Enthusiast",
       description: "Building decentralized applications and smart contracts",
       gradient: "from-orange-500 to-red-500",
     },
