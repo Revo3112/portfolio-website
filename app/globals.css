@@ -242,6 +242,11 @@
   background-clip: text;
 }
 
+/* Radial gradient utility */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
 /* Essential glass effects */
 .glass {
   background: var(--glass);

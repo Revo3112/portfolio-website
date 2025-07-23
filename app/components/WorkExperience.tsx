@@ -25,9 +25,9 @@ const WorkExperience = () => {
         "Built benchmarking system for startups to compare performance metrics with industry standards",
       ],
       skills: ["React", "Node.js", "AI/ML", "PostgreSQL"],
-      gradient: "from-purple-600 via-purple-700 to-indigo-800",
+      gradient: "from-purple-600 to-purple-800",
       accentColor: "text-purple-400",
-      borderColor: "border-purple-500/20 hover:border-purple-400/40",
+      borderColor: "border-purple-500/30",
     },
     {
       id: "02",
@@ -42,9 +42,9 @@ const WorkExperience = () => {
         "Created family-friendly website applying the 8 Golden Rules of UI Design",
       ],
       skills: ["Next.js", "WhatsApp API", "UI/UX", "Responsive Design"],
-      gradient: "from-cyan-600 via-blue-700 to-indigo-800",
+      gradient: "from-cyan-600 to-cyan-800",
       accentColor: "text-cyan-400",
-      borderColor: "border-cyan-500/20 hover:border-cyan-400/40",
+      borderColor: "border-cyan-500/30",
     },
     {
       id: "03",
@@ -59,9 +59,9 @@ const WorkExperience = () => {
         "Evaluated 10+ student projects ensuring proper implementation of embedded computing principles",
       ],
       skills: ["Arduino", "Raspberry Pi", "IoT", "Teaching"],
-      gradient: "from-emerald-600 via-green-700 to-teal-800",
+      gradient: "from-emerald-600 to-emerald-800",
       accentColor: "text-emerald-400",
-      borderColor: "border-emerald-500/20 hover:border-emerald-400/40",
+      borderColor: "border-emerald-500/30",
     },
     {
       id: "04",
@@ -76,19 +76,14 @@ const WorkExperience = () => {
         "Executed 5+ unit and integration tests, improving query performance by 30%",
       ],
       skills: ["SQL", "Database Design", "PostgreSQL", "Teaching"],
-      gradient: "from-orange-600 via-red-700 to-pink-800",
+      gradient: "from-orange-600 to-orange-800",
       accentColor: "text-orange-400",
-      borderColor: "border-orange-500/20 hover:border-orange-400/40",
+      borderColor: "border-orange-500/30",
     },
   ], []);
 
   return (
     <section id="work" className="py-20 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/5 to-transparent" />
-      <div className="absolute top-1/4 left-0 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-0 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl" />
-
       <div className="container mx-auto px-6 relative z-10">
         {/* Header Section */}
         <motion.div
@@ -120,177 +115,148 @@ const WorkExperience = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-gray-400 text-lg max-w-3xl mx-auto leading-relaxed"
           >
-            My professional journey through various roles, showcasing growth and impact across different domains in technology and education.
+            Following projects showcases my professional journey through various roles, showcasing growth and impact across different domains in technology and education.
           </motion.p>
         </motion.div>
 
-        {/* Experience Cards */}
-        <div className="space-y-8 max-w-5xl mx-auto">
+        {/* Timeline Container */}
+        <div className="relative max-w-6xl mx-auto">
+          {/* Vertical Timeline Line */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-purple-500/50 via-cyan-500/50 to-orange-500/50 hidden md:block"></div>
+
+          {/* Experience Cards */}
           {experiences.map((exp, index) => {
             const [cardRef, cardInView] = useInViewObserver({
-              threshold: 0.2,
+              threshold: 0.3,
               triggerOnce: true,
             });
+
+            const isLeft = index % 2 === 0;
 
             return (
               <motion.div
                 key={exp.id}
                 ref={cardRef}
-                initial={{ opacity: 0, y: 60 }}
-                animate={cardInView ? { opacity: 1, y: 0 } : {}}
+                initial={{ opacity: 0, x: isLeft ? -100 : 100 }}
+                animate={cardInView ? { opacity: 1, x: 0 } : {}}
                 transition={{
                   duration: 0.6,
-                  delay: index * 0.15,
+                  delay: index * 0.2,
                   ease: "easeOut"
                 }}
-                className="group relative performance-optimized"
+                className={`relative flex items-center mb-16 ${
+                  isLeft ? 'md:flex-row' : 'md:flex-row-reverse'
+                } flex-col`}
               >
-                {/* Main Card */}
-                <div className={`relative bg-white/5 backdrop-blur-xl rounded-2xl border ${exp.borderColor} transition-all duration-500 hover:bg-white/10 hover:transform hover:scale-[1.02]`}>
-                  {/* Gradient Overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${exp.gradient} opacity-0 group-hover:opacity-10 rounded-2xl transition-all duration-500`} />
+                {/* Timeline Node */}
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={cardInView ? { scale: 1 } : {}}
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.2 + 0.3,
+                    type: "spring",
+                    stiffness: 200
+                  }}
+                  className={`absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-gradient-to-r ${exp.gradient} rounded-full border-4 border-background z-10 hidden md:block`}
+                />
 
-                  {/* Content Container */}
-                  <div className="relative z-10 p-8">
-                    {/* Header with Status Badge */}
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <motion.h3
-                            initial={{ opacity: 0 }}
-                            animate={cardInView ? { opacity: 1 } : {}}
-                            transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
-                            className="text-2xl md:text-3xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-cyan-400 transition-all duration-300"
-                          >
-                            {exp.title}
-                          </motion.h3>
-                          <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-                            exp.status === 'Current'
-                              ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                              : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
-                          }`}>
-                            {exp.status}
-                          </span>
+                {/* Card Content */}
+                <div className={`w-full md:w-5/12 ${isLeft ? 'md:pr-16' : 'md:pl-16'}`}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={cardInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.5, delay: index * 0.2 + 0.4 }}
+                    className="group relative"
+                  >
+                    {/* Card */}
+                    <div className={`relative bg-white/5 backdrop-blur-sm rounded-2xl border ${exp.borderColor} p-6 transition-all duration-300 hover:bg-white/10 hover:border-opacity-60`}>
+                      {/* Header */}
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className={`text-xl font-bold text-white`}>
+                              {exp.title}
+                            </h3>
+                            <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                              exp.status === 'Current'
+                                ? 'bg-green-500/20 text-green-400'
+                                : 'bg-gray-500/20 text-gray-400'
+                            }`}>
+                              {exp.status}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2 mb-3">
+                            <Building className="w-4 h-4 text-purple-400" />
+                            <p className={`font-medium ${exp.accentColor}`}>
+                              {exp.company}
+                            </p>
+                          </div>
+
+                          {/* Meta Information */}
+                          <div className="flex flex-wrap gap-4 text-gray-400 text-sm mb-4">
+                            <span className="flex items-center gap-1">
+                              <Calendar className="w-3 h-3" />
+                              {exp.period}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-3 h-3" />
+                              {exp.location}
+                            </span>
+                          </div>
                         </div>
 
-                        <motion.div
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={cardInView ? { opacity: 1, x: 0 } : {}}
-                          transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
-                          className="flex items-center gap-2 mb-1"
-                        >
-                          <Building className="w-5 h-5 text-purple-400" />
-                          <p className={`text-lg font-medium ${exp.accentColor}`}>
-                            {exp.company}
-                          </p>
-                        </motion.div>
-
-                        {/* Meta Information */}
-                        <motion.div
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={cardInView ? { opacity: 1, x: 0 } : {}}
-                          transition={{ duration: 0.5, delay: index * 0.1 + 0.4 }}
-                          className="flex flex-wrap gap-6 text-gray-400 text-sm"
-                        >
-                          <span className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
-                            {exp.period}
-                          </span>
-                          <span className="flex items-center gap-2">
-                            <MapPin className="w-4 h-4" />
-                            {exp.location}
-                          </span>
-                          <span className="flex items-center gap-2">
-                            <Briefcase className="w-4 h-4" />
-                            Full-time
-                          </span>
-                        </motion.div>
+                        {/* Number Badge */}
+                        <div className={`w-12 h-12 bg-gradient-to-r ${exp.gradient} rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
+                          {exp.id}
+                        </div>
                       </div>
 
-                      {/* Number Badge */}
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={cardInView ? { opacity: 1, scale: 1 } : {}}
-                        transition={{
-                          duration: 0.5,
-                          delay: index * 0.1 + 0.5,
-                          type: "spring",
-                          stiffness: 200
-                        }}
-                        className={`w-16 h-16 bg-gradient-to-br ${exp.gradient} rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300`}
-                      >
-                        {exp.id}
-                      </motion.div>
-                    </div>
-
-                    {/* Description */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={cardInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.5, delay: index * 0.1 + 0.6 }}
-                      className="mb-6"
-                    >
-                      <ul className="space-y-3">
-                        {exp.description.map((item, i) => (
-                          <motion.li
+                      {/* Description */}
+                      <ul className="space-y-2 mb-4">
+                        {exp.description.slice(0, 2).map((item, i) => (
+                          <li
                             key={i}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={cardInView ? { opacity: 1, x: 0 } : {}}
-                            transition={{
-                              duration: 0.4,
-                              delay: index * 0.1 + 0.7 + i * 0.1
-                            }}
-                            className="text-gray-300 flex items-start gap-3 group/item"
+                            className="text-gray-300 flex items-start gap-2 text-sm"
                           >
-                            <ExternalLink className="w-4 h-4 mt-0.5 text-purple-400 group-hover/item:text-purple-300 transition-colors flex-shrink-0" />
-                            <span className="group-hover/item:text-white transition-colors leading-relaxed">
+                            <ExternalLink className="w-3 h-3 mt-0.5 text-purple-400 flex-shrink-0" />
+                            <span className="leading-relaxed">
                               {item}
                             </span>
-                          </motion.li>
+                          </li>
                         ))}
                       </ul>
-                    </motion.div>
 
-                    {/* Skills */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={cardInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.5, delay: index * 0.1 + 0.8 }}
-                      className="flex flex-wrap gap-2"
-                    >
-                      {exp.skills.map((skill, i) => (
-                        <motion.span
-                          key={i}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={cardInView ? { opacity: 1, scale: 1 } : {}}
-                          transition={{
-                            duration: 0.3,
-                            delay: index * 0.1 + 0.9 + i * 0.05,
-                            type: "spring",
-                            stiffness: 300
-                          }}
-                          className={`px-4 py-2 text-sm font-medium bg-gradient-to-r ${exp.gradient} bg-opacity-10 ${exp.accentColor} rounded-full border ${exp.borderColor.split(' ')[0]} backdrop-blur-sm hover:bg-opacity-20 transition-all duration-300 cursor-default`}
-                        >
-                          {skill}
-                        </motion.span>
-                      ))}
-                    </motion.div>
-                  </div>
+                      {/* Skills */}
+                      <div className="flex flex-wrap gap-2">
+                        {exp.skills.map((skill, i) => (
+                          <span
+                            key={i}
+                            className={`px-3 py-1 text-xs font-medium bg-gradient-to-r ${exp.gradient} bg-opacity-10 ${exp.accentColor} rounded-full border ${exp.borderColor} backdrop-blur-sm`}
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
 
-                  {/* Decorative Glow Effects */}
-                  <div className="absolute -top-1 -left-1 w-4 h-4 bg-purple-500 rounded-full blur-sm opacity-30" />
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-cyan-500 rounded-full blur-sm opacity-30" />
+                    {/* Arrow pointing to timeline (desktop only) */}
+                    <div className={`absolute top-1/2 transform -translate-y-1/2 w-0 h-0 hidden md:block ${
+                      isLeft
+                        ? 'right-0 translate-x-full border-l-8 border-l-white/10 border-y-8 border-y-transparent'
+                        : 'left-0 -translate-x-full border-r-8 border-r-white/10 border-y-8 border-y-transparent'
+                    }`} />
+                  </motion.div>
                 </div>
+
+                {/* Empty space for the other side (desktop only) */}
+                <div className="hidden md:block w-5/12" />
               </motion.div>
             );
           })}
         </div>
-
-        {/* Decorative Timeline */}
-        <div className="absolute left-1/2 top-32 bottom-20 w-px bg-gradient-to-b from-purple-500/30 via-cyan-500/30 to-purple-500/30 -translate-x-1/2 hidden lg:block" />
       </div>
     </section>
   );
-};
-
-export default WorkExperience;
+};export default WorkExperience;
