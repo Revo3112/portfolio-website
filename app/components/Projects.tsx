@@ -3,8 +3,8 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import Image from "next/image";
-import { ExternalLink, Github, Star } from "lucide-react";
+import { Github } from "lucide-react";
+import ProjectCard3D from "./ProjectCard3D";
 
 const Projects = () => {
   const ref = useRef(null);
@@ -82,7 +82,7 @@ const Projects = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <p className="text-purple-400 mb-2">MY WORK</p>
+          <p className="text-purple-400 mb-2 uppercase tracking-wider text-sm">My Work</p>
           <h2 className="text-4xl md:text-5xl font-bold">
             Projects<span className="gradient-text">.</span>
           </h2>
@@ -92,68 +92,10 @@ const Projects = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Projects Grid with 3D Cards */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 perspective-1000">
           {projects.map((project, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
-              whileHover={{ y: -10 }}
-              className="glass-effect rounded-2xl overflow-hidden hover-glow group"
-            >
-              {/* Project Image */}
-              <div className="relative h-48 overflow-hidden">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-                {project.featured && (
-                  <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                    <Star className="w-3 h-3" />
-                    Featured
-                  </div>
-                )}
-              </div>
-
-              {/* Project Content */}
-              <div className="p-6">
-                <h3 className="text-2xl font-bold mb-3">{project.title}</h3>
-                <p className="text-gray-400 mb-4">{project.description}</p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.map((tag, tagIndex) => (
-                    <span
-                      key={tagIndex}
-                      className="text-xs px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Links */}
-                <div className="flex gap-4">
-                  <motion.a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 border border-purple-500/30 rounded-lg text-gray-300 hover:text-white hover:border-purple-400/50 transition-all duration-300 cursor-interactive"
-                  >
-                    <Github className="w-4 h-4" />
-                    View Code
-                  </motion.a>
-                  <div className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-xs font-medium text-purple-400">
-                    {project.type}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            <ProjectCard3D key={index} project={project} index={index} />
           ))}
         </div>
 
@@ -162,7 +104,7 @@ const Projects = () => {
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="text-center mt-12"
+          className="text-center mt-16"
         >
           <motion.a
             href="https://github.com/Revo3112"
@@ -170,7 +112,7 @@ const Projects = () => {
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-full font-medium hover:shadow-lg hover:shadow-purple-500/25 transition-shadow duration-300"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-full font-medium hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300"
           >
             <Github className="w-5 h-5" />
             View All Projects on GitHub

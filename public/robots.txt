@@ -1,0 +1,11 @@
+# Robots.txt for Revo3112 Portfolio
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://revo3112.vercel.app/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
