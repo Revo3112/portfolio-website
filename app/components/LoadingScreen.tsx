@@ -6,8 +6,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 const LoadingScreen = () => {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [particles, setParticles] = useState<Array<{left: number, top: number, duration: number, delay: number}>>([]);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // Ensure we're on the client side
+    setIsClient(true);
+
+    // Initialize particles on client-side to avoid hydration mismatch
+    const particleData = Array.from({ length: 20 }, () => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: Math.random() * 3 + 2,
+      delay: Math.random() * 2,
+    }));
+    setParticles(particleData);
+
     // Simulate loading progress
     const interval = setInterval(() => {
       setProgress(prev => {
@@ -22,6 +36,10 @@ const LoadingScreen = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  if (!isClient) {
+    return null; // Don't render anything during SSR
+  }
 
   return (
     <AnimatePresence>
@@ -96,22 +114,22 @@ const LoadingScreen = () => {
 
           {/* Background Particles */}
           <div className="absolute inset-0 overflow-hidden">
-            {[...Array(20)].map((_, i) => (
+            {particles.map((particle, i) => (
               <motion.div
                 key={i}
                 className="absolute w-2 h-2 bg-white rounded-full opacity-20"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
+                  left: `${particle.left}%`,
+                  top: `${particle.top}%`,
                 }}
                 animate={{
                   y: [-20, -100],
                   opacity: [0, 1, 0],
                 }}
                 transition={{
-                  duration: Math.random() * 3 + 2,
+                  duration: particle.duration,
                   repeat: Infinity,
-                  delay: Math.random() * 2,
+                  delay: particle.delay,
                 }}
               />
             ))}
