@@ -1,11 +1,8 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
-import { Float, PresentationControls, Environment, ContactShadows } from "@react-three/drei";
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, Suspense, useState, useEffect } from "react";
-import * as THREE from "three";
+import { useRef, useState } from "react";
 import {
   SiHtml5,
   SiCss3,
@@ -66,29 +63,6 @@ const skillsData = [
   { name: "Blockchain", Icon: SiSolidity, color: "#363636", url: "https://ethereum.org/" },
   { name: "AI/ML", Icon: SiTensorflow, color: "#FF6F00", url: "https://www.tensorflow.org/" }
 ];
-
-// 3D Floating Icon Component
-function FloatingIcon({ position, Icon, color, scale = 1 }: any) {
-  return (
-    <Float
-      speed={1.5}
-      rotationIntensity={0.5}
-      floatIntensity={0.5}
-      floatingRange={[-0.1, 0.1]}
-    >
-      <mesh position={position} scale={scale}>
-        <boxGeometry args={[1.5, 1.5, 0.3]} />
-        <meshStandardMaterial
-          color={color}
-          metalness={0.8}
-          roughness={0.2}
-          emissive={color}
-          emissiveIntensity={0.2}
-        />
-      </mesh>
-    </Float>
-  );
-}
 
 // Individual Skill Card Component
 function SkillCard({ skill, index }: { skill: typeof skillsData[0], index: number }) {
@@ -275,31 +249,6 @@ function SkillCard({ skill, index }: { skill: typeof skillsData[0], index: numbe
 const Skills = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [particles, setParticles] = useState<Array<{
-    position: [number, number, number];
-    speed: number;
-    rotationIntensity: number;
-    floatIntensity: number;
-    color: string;
-    size: number;
-  }>>([]);
-
-  useEffect(() => {
-    // Initialize particles on client-side to avoid hydration mismatch
-    const particleData = Array.from({ length: 20 }, () => ({
-      position: [
-        (Math.random() - 0.5) * 20,
-        (Math.random() - 0.5) * 10,
-        (Math.random() - 0.5) * 10
-      ] as [number, number, number],
-      speed: 1 + Math.random() * 2,
-      rotationIntensity: Math.random(),
-      floatIntensity: Math.random(),
-      color: `hsl(${Math.random() * 360}, 70%, 50%)`,
-      size: 0.05 + Math.random() * 0.1
-    }));
-    setParticles(particleData);
-  }, []);
 
   return (
     <section
@@ -329,35 +278,6 @@ const Skills = () => {
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full"></div>
         </motion.div>
-
-        {/* 3D Canvas Background */}
-        <div className="absolute inset-0 pointer-events-none">
-          <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} intensity={0.5} />
-            <Suspense fallback={null}>
-              <Environment preset="city" />
-              {/* Floating particles */}
-              {particles.map((particle, i) => (
-                <Float
-                  key={i}
-                  speed={particle.speed}
-                  rotationIntensity={particle.rotationIntensity}
-                  floatIntensity={particle.floatIntensity}
-                >
-                  <mesh position={particle.position}>
-                    <sphereGeometry args={[particle.size, 16, 16]} />
-                    <meshStandardMaterial
-                      color={particle.color}
-                      emissive={particle.color}
-                      emissiveIntensity={0.5}
-                    />
-                  </mesh>
-                </Float>
-              ))}
-            </Suspense>
-          </Canvas>
-        </div>
 
         {/* Skills Grid - Center Layout with Consistent Spacing */}
         <motion.div

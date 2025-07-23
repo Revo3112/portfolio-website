@@ -3,12 +3,31 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Type definitions for particle systems
+interface Particle {
+  id: number;
+  x: number;
+  y: number;
+  size: number;
+  duration: number;
+  delay: number;
+}
+
+interface Orb {
+  id: number;
+  size: number;
+  x: number;
+  y: number;
+  duration: number;
+  delay: number;
+}
+
 const ProfessionalLoadingScreen = () => {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState('Initializing...');
-  const [particles, setParticles] = useState([]);
-  const [orbs, setOrbs] = useState([]);
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const [orbs, setOrbs] = useState<Orb[]>([]);
 
   const loadingSteps = [
     'Initializing components...',
