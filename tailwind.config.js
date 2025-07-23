@@ -72,6 +72,8 @@ module.exports = {
         'fade-in-right': 'fadeInRight 0.6s ease-out forwards',
         'slide-in-scale': 'slideInScale 0.8s ease-out forwards',
         'shimmer': 'shimmer 1.5s infinite',
+        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        'bounce-slow': 'bounce 3s infinite',
       },
       backdropBlur: {
         xs: '2px',

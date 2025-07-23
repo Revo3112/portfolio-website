@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Lenis from "lenis";
 
 interface SmoothScrollProps {
@@ -10,52 +10,36 @@ interface SmoothScrollProps {
 const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
   const lenisRef = useRef<Lenis | null>(null);
   const rafRef = useRef<number | null>(null);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Initialize Lenis with optimized settings
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      return; // Don't initialize smooth scroll for users who prefer reduced motion
+    }
+
+    // Initialize Lenis with simplified, optimized settings
     const lenis = new Lenis({
-      duration: 0.8, // Reduced duration for smoother performance
-      easing: (t) => 1 - Math.pow(1 - t, 3), // Simpler easing function
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 0.8, // Reduced for better control
-      touchMultiplier: 1.5, // Reduced for mobile
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
       infinite: false,
       autoResize: true,
-      syncTouch: true, // Better touch performance
+      syncTouch: false, // Disable for better mobile performance
     });
 
     lenisRef.current = lenis;
 
-    // Optimized animation frame with performance monitoring
+    // Simplified RAF loop
     function raf(time: number) {
-      if (lenisRef.current) {
-        lenisRef.current.raf(time);
-        rafRef.current = requestAnimationFrame(raf);
-      }
+      lenisRef.current?.raf(time);
+      rafRef.current = requestAnimationFrame(raf);
     }
-
-    // Handle scroll start/end for performance optimization
-    lenis.on('scroll', () => {
-      if (!isScrolling) {
-        setIsScrolling(true);
-        document.body.classList.add('is-scrolling');
-      }
-
-      // Clear existing timeout
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-
-      // Set timeout to detect scroll end
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-        document.body.classList.remove('is-scrolling');
-      }, 150);
-    });
 
     rafRef.current = requestAnimationFrame(raf);
 
@@ -64,15 +48,11 @@ const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
       if (lenisRef.current) {
         lenisRef.current.destroy();
       }
-      document.body.classList.remove('is-scrolling');
     };
-  }, [isScrolling]);
+  }, []);
 
   return <>{children}</>;
 };

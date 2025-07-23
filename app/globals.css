@@ -8,12 +8,9 @@
     overflow-x: hidden;
   }
 
-  /* Performance optimization variables */
+  /* CSS Variables - Simplified and Optimized */
   :root {
-    --animation-duration: 300ms;
-    --smooth-factor: 1;
-
-    /* Dark theme inspired by zexoverz.vercel.app */
+    /* Dark theme colors */
     --background: #0a0a0a;
     --background-secondary: #1a1a2e;
     --background-tertiary: #16213e;
@@ -21,13 +18,13 @@
     --foreground-muted: #94a3b8;
     --foreground-dimmed: #64748b;
 
-    /* Purple gradients */
+    /* Primary colors */
     --primary: #8b5cf6;
     --primary-dark: #7c3aed;
     --primary-light: #a78bfa;
     --primary-foreground: #ffffff;
 
-    /* Cyan accents */
+    /* Secondary colors */
     --secondary: #06b6d4;
     --secondary-dark: #0891b2;
     --secondary-light: #22d3ee;
@@ -38,7 +35,7 @@
     --glass-strong: rgba(255, 255, 255, 0.1);
     --glass-border: rgba(255, 255, 255, 0.1);
 
-    /* Card and surfaces */
+    /* UI elements */
     --card: rgba(26, 26, 46, 0.8);
     --card-foreground: #ffffff;
     --muted: #1e293b;
@@ -58,12 +55,11 @@
     --solidity-color: #363636;
     --git-color: #f05032;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply text-foreground;
     background: var(--background);
@@ -90,7 +86,7 @@
   }
 }
 
-/* Essential animations only */
+/* Essential animations only - Optimized for performance */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -111,22 +107,64 @@
   }
 }
 
-/* Optimized animation utility classes */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.4);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Animation utility classes */
 .animate-fade-in-up {
-  animation: fadeInUp 0.4s ease-out forwards;
+  animation: fadeInUp 0.6s ease-out forwards;
 }
 
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
 }
 
-/* Optimized card hover effect */
-.card-hover {
-  transition: transform 0.2s ease;
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 
-.card-hover:hover {
-  transform: translateY(-2px);
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
 }
 
 /* Form styles */
@@ -138,103 +176,22 @@
   @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors resize-none;
 }
 
-/* Loading animation */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+/* Essential glass effects - Optimized */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
 }
 
-.animate-spin {
-  animation: spin 1s linear infinite;
+.glass-effect {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Fade in animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.6s ease-out;
-}
-
-/* Responsive text */
-.text-responsive {
-  @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl;
-}
-
-/* Section title */
-.section-title {
-  @apply text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-4;
-}
-
-.section-subtitle {
-  @apply text-gray-400 text-center mb-12 max-w-2xl mx-auto;
-}
-
-/* Overlay */
-.overlay {
-  @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-40;
-}
-
-/* Modal */
-.modal {
-  @apply fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background border border-border rounded-xl p-6 z-50 max-w-md w-full;
-}
-
-/* Badge */
-.badge {
-  @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20;
-}
-
-/* Tooltip */
-.tooltip {
-  @apply absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg opacity-0 pointer-events-none transition-opacity duration-300;
-}
-
-.tooltip-trigger:hover .tooltip {
-  @apply opacity-100;
-}
-
-/* Grid layout */
-.grid-auto-fit {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-}
-
-/* Aspect ratio */
-.aspect-video {
-  aspect-ratio: 16 / 9;
-}
-
-.aspect-square {
-  aspect-ratio: 1 / 1;
-}
-
-/* Text shadow */
-.text-shadow {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Glow effect */
-.glow {
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
-}
-
-/* Gradient background */
-.gradient-bg {
-  @apply bg-gradient-to-br from-purple-900/20 via-background to-cyan-900/20;
-}
-
-/* Essential gradient text */
+/* Gradient utilities */
 .gradient-text {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
@@ -242,17 +199,12 @@
   background-clip: text;
 }
 
-/* Radial gradient utility */
 .bg-gradient-radial {
   background: radial-gradient(circle, var(--tw-gradient-stops));
 }
 
-/* Essential glass effects */
-.glass {
-  background: var(--glass);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
+.gradient-bg {
+  @apply bg-gradient-to-br from-purple-900/20 via-background to-cyan-900/20;
 }
 
 /* Responsive text utilities */
@@ -264,32 +216,19 @@
   @apply text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-4;
 }
 
-/* Performance optimizations for 3D elements */
-.gpu-optimized {
-  transform: translateZ(0);
-  will-change: transform;
+.section-subtitle {
+  @apply text-gray-400 text-center mb-12 max-w-2xl mx-auto;
 }
 
-/* Enhanced depth layers */
-.depth-layer-1 { z-index: 1; }
-.depth-layer-2 { z-index: 2; }
-.depth-layer-3 { z-index: 3; }
-.depth-layer-10 { z-index: 10; }
-
-/* 3D Perspective for project cards */
-.perspective-1000 {
-  perspective: 1000px;
+/* Hover effects */
+.card-hover {
+  transition: transform 0.2s ease;
 }
 
-/* Glass effect with better performance */
-.glass-effect {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.card-hover:hover {
+  transform: translateY(-2px);
 }
 
-/* Hover glow effect */
 .hover-glow {
   transition: all 0.3s ease;
 }
@@ -298,7 +237,100 @@
   box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
 }
 
-/* Smooth scroll behavior with performance optimization */
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* UI Components */
+.overlay {
+  @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-40;
+}
+
+.modal {
+  @apply fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background border border-border rounded-xl p-6 z-50 max-w-md w-full;
+}
+
+.badge {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20;
+}
+
+.tooltip {
+  @apply absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg opacity-0 pointer-events-none transition-opacity duration-300;
+}
+
+.tooltip-trigger:hover .tooltip {
+  @apply opacity-100;
+}
+
+/* Layout utilities */
+.grid-auto-fit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+/* Visual effects */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.glow {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+}
+
+/* Background patterns */
+.bg-dots {
+  background-image: radial-gradient(circle, rgba(139, 92, 246, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Z-index layers */
+.depth-layer-1 { z-index: 1; }
+.depth-layer-2 { z-index: 2; }
+.depth-layer-3 { z-index: 3; }
+.depth-layer-10 { z-index: 10; }
+
+/* Performance optimization */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.performance-optimized {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+/* Cursor utilities */
+.cursor-interactive {
+  cursor: pointer;
+}
+
+/* Lenis smooth scroll optimization */
 html.lenis {
   height: auto;
 }
@@ -319,36 +351,6 @@ html.lenis {
   pointer-events: none;
 }
 
-/* Performance optimization during scroll */
-body.is-scrolling * {
-  pointer-events: none !important;
-}
-
-body.is-scrolling .parallax-element {
-  transform: translate3d(0, 0, 0) !important;
-}
-
-/* Reduce animation complexity during scroll */
-body.is-scrolling .animate-pulse,
-body.is-scrolling .animate-bounce,
-body.is-scrolling .animate-spin {
-  animation-play-state: paused;
-}
-
-/* GPU acceleration for better performance */
-.smooth-scroll-optimized {
-  transform: translateZ(0);
-  will-change: transform;
-  contain: layout style paint;
-}
-
-/* Optimize animations */
-.performance-optimized {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -367,12 +369,7 @@ body.is-scrolling .animate-spin {
   background: linear-gradient(to bottom, var(--primary-light), var(--secondary-light));
 }
 
-/* Cursor interactive elements */
-.cursor-interactive {
-  cursor: pointer;
-}
-
-/* Accessibility and Performance Optimizations */
+/* Accessibility optimizations */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -384,9 +381,17 @@ body.is-scrolling .animate-spin {
   .lenis {
     scroll-behavior: auto !important;
   }
+
+  .animate-pulse,
+  .animate-bounce,
+  .animate-spin,
+  .animate-float,
+  .animate-pulse-glow,
+  .animate-shimmer {
+    animation: none !important;
+  }
 }
 
-/* Optimize for users with high contrast preference */
 @media (prefers-contrast: high) {
   .glass {
     background: rgba(255, 255, 255, 0.15);
@@ -394,22 +399,38 @@ body.is-scrolling .animate-spin {
   }
 }
 
-/* Performance optimization for low-end devices */
+/* Mobile optimizations */
 @media (max-width: 768px) {
   .backdrop-blur-xl {
-    backdrop-filter: blur(4px); /* Reduced blur for mobile */
+    backdrop-filter: blur(4px);
   }
 
   .blur-3xl {
-    filter: blur(20px); /* Reduced blur intensity */
+    filter: blur(20px);
+  }
+
+  .glass,
+  .glass-effect {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
   }
 }
 
-/* Reduce animations on battery save mode */
+/* Battery save mode optimization */
 @media (prefers-reduced-data: reduce) {
   .animate-pulse,
   .animate-bounce,
-  .animate-spin {
+  .animate-spin,
+  .animate-float,
+  .animate-pulse-glow,
+  .animate-shimmer {
     animation: none;
+  }
+
+  .glass,
+  .glass-effect {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.1);
   }
 }
