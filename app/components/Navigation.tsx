@@ -72,14 +72,6 @@ const Navigation = () => {
           ))}
         </ul>
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="hidden md:block px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full font-medium hover:shadow-lg hover:shadow-blue-500/25 transition-shadow duration-300 cursor-interactive"
-        >
-          Download CV
-        </motion.button>
-
         {/* Mobile menu button */}
         <button
           className="md:hidden text-white p-2"
@@ -140,16 +132,6 @@ const Navigation = () => {
                     </button>
                   </motion.li>
                 ))}
-                <motion.li
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navItems.length * 0.1 }}
-                  className="pt-4"
-                >
-                  <button className="w-full px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full font-medium">
-                    Download CV
-                  </button>
-                </motion.li>
               </ul>
             </div>
           </motion.div>
