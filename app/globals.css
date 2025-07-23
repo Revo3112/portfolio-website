@@ -4,10 +4,15 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto; /* Let Lenis handle smooth scrolling */
+    overflow-x: hidden;
   }
 
+  /* Performance optimization variables */
   :root {
+    --animation-duration: 300ms;
+    --smooth-factor: 1;
+
     /* Dark theme inspired by zexoverz.vercel.app */
     --background: #0a0a0a;
     --background-secondary: #1a1a2e;
@@ -288,7 +293,7 @@
   box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
 }
 
-/* Smooth scroll behavior */
+/* Smooth scroll behavior with performance optimization */
 html.lenis {
   height: auto;
 }
@@ -307,6 +312,36 @@ html.lenis {
 
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
+}
+
+/* Performance optimization during scroll */
+body.is-scrolling * {
+  pointer-events: none !important;
+}
+
+body.is-scrolling .parallax-element {
+  transform: translate3d(0, 0, 0) !important;
+}
+
+/* Reduce animation complexity during scroll */
+body.is-scrolling .animate-pulse,
+body.is-scrolling .animate-bounce,
+body.is-scrolling .animate-spin {
+  animation-play-state: paused;
+}
+
+/* GPU acceleration for better performance */
+.smooth-scroll-optimized {
+  transform: translateZ(0);
+  will-change: transform;
+  contain: layout style paint;
+}
+
+/* Optimize animations */
+.performance-optimized {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 /* Custom scrollbar */
@@ -330,4 +365,46 @@ html.lenis {
 /* Cursor interactive elements */
 .cursor-interactive {
   cursor: pointer;
+}
+
+/* Accessibility and Performance Optimizations */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .lenis {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimize for users with high contrast preference */
+@media (prefers-contrast: high) {
+  .glass {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Performance optimization for low-end devices */
+@media (max-width: 768px) {
+  .backdrop-blur-xl {
+    backdrop-filter: blur(4px); /* Reduced blur for mobile */
+  }
+
+  .blur-3xl {
+    filter: blur(20px); /* Reduced blur intensity */
+  }
+}
+
+/* Reduce animations on battery save mode */
+@media (prefers-reduced-data: reduce) {
+  .animate-pulse,
+  .animate-bounce,
+  .animate-spin {
+    animation: none;
+  }
 }
