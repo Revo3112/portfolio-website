@@ -1,3 +1,31 @@
+/* globals.css - CONTROLLED REDUCE MOTION */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --animation-fast: 0.2s;
+    --animation-normal: 0.4s;
+    --animation-slow: 0.8s;
+    --animation-epic: 1.0s;
+  }
+
+  /* Hanya reduce yang ekstrem */
+  .animate-epic-pulse {
+    animation-duration: 2s !important;
+  }
+}
+
+/* MOBILE SPECIFIC REDUCTION */
+@media (max-width: 767px) {
+  :root {
+    --animation-fast: 0.2s;
+    --animation-normal: 0.4s;
+    --animation-slow: 0.6s;
+    --animation-epic: 0.8s;
+  }
+
+  .gpu-optimized {
+    will-change: auto; /* Disable on mobile */
+  }
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

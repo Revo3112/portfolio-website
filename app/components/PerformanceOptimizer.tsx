@@ -12,12 +12,6 @@ const PerformanceOptimizer = ({ children }: { children: React.ReactNode }) => {
       setIsVisible(true);
     }, 1000);
 
-    // Basic performance optimization
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
-      document.documentElement.style.setProperty('--animation-duration', '0.01ms');
-    }
-
     return () => clearTimeout(timer);
   }, []);
 

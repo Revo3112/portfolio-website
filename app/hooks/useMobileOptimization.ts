@@ -43,8 +43,8 @@ export const useMobileOptimization = () => {
   }, []);
 
   // Simplified effects logic
-  const shouldReduceEffects = hasMounted && isReducedMotion;
-  const shouldEnableFullEffects = hasMounted && !isReducedMotion;
+  const shouldReduceEffects = false; // Force disable
+  const shouldEnableFullEffects = true; // Force enable
 
   return {
     isMobile,

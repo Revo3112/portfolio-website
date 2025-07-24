@@ -20,11 +20,11 @@ const WorkExperience = () => {
       status: "Current",
       description: [
         "Integrating AI-based Sustainable Development Goals recommendations, increasing the accuracy of impact indicator selection by 90% for startups, and enhancing data-driven decision-making.",
-        "Optimizing database performance, increasing query speed by 25% for faster and more efficient data access.",
+        "Optimizing MySQL database performance, increasing query speed by 25% for faster and more efficient data access.",
         "Achieving innovative financial insight features that enable quarterly reporting, empowering investors to make informed decisions and improving overall investment strategies by 20%.",
         "Developing a benchmarking system that allows startups to compare performance metrics with industry standards, enhancing strategic decision-making by 20%.",
       ],
-      skills: ["React", "Node.js", "AI/ML", "PostgreSQL", "Full-Stack Development", "Database Optimization"],
+      skills: ["Laravel", "AI/ML", "MySQL", "Full-Stack Development", "Database Optimization"],
       gradient: "from-purple-600 to-purple-800",
       accentColor: "text-purple-400",
       borderColor: "border-purple-500/30",

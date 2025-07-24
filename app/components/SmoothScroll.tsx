@@ -12,12 +12,7 @@ const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Check for reduced motion preference
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (prefersReducedMotion) {
-      return; // Don't initialize smooth scroll for users who prefer reduced motion
-    }
+    const prefersReducedMotion = false; // Force disable check
 
     // Initialize Lenis with simplified, optimized settings
     const lenis = new Lenis({
