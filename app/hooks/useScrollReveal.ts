@@ -1,6 +1,5 @@
-"use client";
-
-import { useEffect, useRef, useState } from 'react';
+// hooks/useScrollReveal.ts - COMPLETE VERSION
+import { useState, useEffect, useRef } from 'react';
 
 interface UseScrollRevealOptions {
   threshold?: number;
@@ -61,7 +60,6 @@ export const useScrollReveal = (options: UseScrollRevealOptions = {}) => {
   return { ref, isVisible };
 };
 
-// Pre-defined animation variants
 export const scrollRevealVariants = {
   hidden: {
     opacity: 0,

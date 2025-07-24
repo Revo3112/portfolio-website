@@ -1,18 +1,18 @@
-// components/CursorBlob.tsx - FIXED VERSION
+// components/CursorBlob.tsx - COMPLETE HYDRATION-SAFE VERSION
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
 import { useMobileOptimization } from '../hooks/useMobileOptimization';
 
 const CursorBlob = () => {
-  const { isDesktop } = useMobileOptimization();
+  const { isDesktop, hasMounted } = useMobileOptimization();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Early return inside useEffect is fine
-    if (!isDesktop) return;
+    // Early return if not mounted or not desktop
+    if (!hasMounted || !isDesktop) return;
 
     let mouseX = 0;
     let mouseY = 0;
@@ -48,10 +48,10 @@ const CursorBlob = () => {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isDesktop]); // Add isDesktop as dependency
+  }, [isDesktop, hasMounted]);
 
-  // Conditional rendering AFTER all hooks
-  if (!isDesktop) {
+  // Return null until client detection is complete
+  if (!hasMounted || !isDesktop) {
     return null;
   }
 

@@ -55,19 +55,22 @@ interface OrbitingElement {
 }
 
 const AnimatedBackground = () => {
-  const { shouldReduceEffects, isDesktop, isMobile, shouldEnableFullEffects } = useMobileOptimization();
+
+  const { shouldReduceEffects, isDesktop, isMobile, shouldEnableFullEffects, hasMounted } = useMobileOptimization();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Enhanced particle system with 3D-like movement
+  // SSR-safe: Only render full effects after both mount and client
+  const readyToRender = hasMounted && isClient;
+
+  // Enhanced particle system with 3D-like movement - SSR SAFE
   const particles = useMemo(() => {
-    if (!isClient) return [];
+    if (!readyToRender) return [];
 
     if (shouldReduceEffects) {
-      // Mobile - minimal particles
       return [...Array(5)].map((_, i) => ({
         id: i,
         x: (i * 25) % 100,
@@ -82,7 +85,6 @@ const AnimatedBackground = () => {
     }
 
     if (shouldEnableFullEffects) {
-      // Desktop - epic particle system
       return [...Array(40)].map((_, i) => ({
         id: i,
         x: (i * 61.8) % 100,
@@ -96,7 +98,6 @@ const AnimatedBackground = () => {
       }));
     }
 
-    // Tablet - moderate particles
     return [...Array(20)].map((_, i) => ({
       id: i,
       x: (i * 61.8) % 100,
@@ -108,11 +109,11 @@ const AnimatedBackground = () => {
       color: ['purple', 'cyan'][i % 2],
       rotationSpeed: 1
     }));
-  }, [isClient, shouldReduceEffects, shouldEnableFullEffects]);
+  }, [readyToRender, shouldReduceEffects, shouldEnableFullEffects]);
 
-  // NEW: Pseudo-3D Objects for depth illusion
+  // NEW: Pseudo-3D Objects for depth illusion - SSR SAFE
   const pseudoObjects = useMemo(() => {
-    if (!isClient || shouldReduceEffects) return [];
+    if (!readyToRender || shouldReduceEffects) return [];
 
     const objectCount = shouldEnableFullEffects ? 15 : 8;
     const types: PseudoObject['type'][] = ['hexagon', 'ring', 'cross', 'spiral', 'wave', 'grid'];
@@ -122,21 +123,21 @@ const AnimatedBackground = () => {
       id: i,
       x: (i * 73.6) % 85 + 7.5,
       y: (i * 41.2) % 85 + 7.5,
-      z: (i * 37) % 300 + 50, // Depth from 50-350
+      z: (i * 37) % 300 + 50,
       width: ((i * 11) % 60) + 80,
       height: ((i * 13) % 60) + 80,
       rotation: (i * 67) % 360,
-      duration: ((i * 7) % 12) + 15, // Slower, more majestic movement
+      duration: ((i * 7) % 12) + 15,
       delay: (i * 3) % 8,
       type: types[i % types.length],
-      opacity: Math.max(0.15 - (((i * 37) % 300 + 50) / 300) * 0.12, 0.03), // Farther = more transparent
+      opacity: Math.max(0.15 - (((i * 37) % 300 + 50) / 300) * 0.12, 0.03),
       color: colors[i % colors.length]
     }));
-  }, [isClient, shouldReduceEffects, shouldEnableFullEffects]);
+  }, [readyToRender, shouldReduceEffects, shouldEnableFullEffects]);
 
   // NEW: Orbiting elements for dynamic movement
   const orbitingElements = useMemo(() => {
-    if (!isClient || shouldReduceEffects) return [];
+    if (!readyToRender || shouldReduceEffects) return [];
 
     const elementCount = shouldEnableFullEffects ? 8 : 4;
 
@@ -150,11 +151,11 @@ const AnimatedBackground = () => {
       duration: ((i * 5) % 15) + 20,
       delay: i * 2.5
     }));
-  }, [isClient, shouldReduceEffects, shouldEnableFullEffects]);
+  }, [readyToRender, shouldReduceEffects, shouldEnableFullEffects]);
 
   // Floating geometric shapes for mid-ground
   const floatingShapes = useMemo(() => {
-    if (!isClient || shouldReduceEffects) return [];
+    if (!readyToRender || shouldReduceEffects) return [];
 
     const shapeCount = shouldEnableFullEffects ? 12 : 6;
     const shapes: ('circle' | 'square' | 'triangle' | 'diamond')[] = ['circle', 'square', 'triangle', 'diamond'];
@@ -169,9 +170,16 @@ const AnimatedBackground = () => {
       delay: (i * 2) % 4,
       shape: shapes[i % shapes.length]
     }));
-  }, [isClient, shouldReduceEffects, shouldEnableFullEffects]);
+  }, [readyToRender, shouldReduceEffects, shouldEnableFullEffects]);
 
-  if (!isClient) return null;
+  // SSR SAFE: Return minimal background until client is ready
+  if (!readyToRender) {
+    return (
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background-secondary/30 to-background-tertiary/20" />
+      </div>
+    );
+  }
 
   const particleColors = {
     purple: 'rgba(139, 92, 246, 0.6)',

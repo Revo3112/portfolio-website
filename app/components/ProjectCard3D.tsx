@@ -23,7 +23,7 @@ interface ProjectCard3DProps {
 }
 
 const ProjectCard3D: React.FC<ProjectCard3DProps> = ({ project, index }) => {
-  const { isMobile, isDesktop } = useMobileOptimization(); // Use specific checks
+  const { isMobile, isDesktop, hasMounted } = useMobileOptimization();
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -42,7 +42,30 @@ const ProjectCard3D: React.FC<ProjectCard3DProps> = ({ project, index }) => {
     transformStyle: "preserve-3d" as const,
   };
 
-  // Mobile version - Simple card
+
+  // SSR SAFE: Return skeleton until client detection
+  if (!hasMounted) {
+    return (
+      <div className="bg-gradient-to-br from-purple-500/10 via-transparent to-cyan-500/10 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-6 min-h-[400px]">
+        <div className="animate-pulse">
+          <div className="h-48 bg-gray-700/20 rounded-lg mb-4" />
+          <div className="space-y-3">
+            <div className="h-6 bg-gray-700/20 rounded w-3/4" />
+            <div className="h-4 bg-gray-700/20 rounded w-full" />
+            <div className="h-4 bg-gray-700/20 rounded w-5/6" />
+            <div className="h-4 bg-gray-700/20 rounded w-4/6" />
+          </div>
+          <div className="flex gap-2 mt-4">
+            <div className="h-6 bg-gray-700/20 rounded px-3 w-16" />
+            <div className="h-6 bg-gray-700/20 rounded px-3 w-20" />
+            <div className="h-6 bg-gray-700/20 rounded px-3 w-12" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Mobile version - Simple card (unchanged)
   if (isMobile) {
     return (
       <motion.div

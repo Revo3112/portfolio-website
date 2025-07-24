@@ -1,4 +1,4 @@
-// components/LoadingScreen.tsx - EPIC PROFESSIONAL VERSION
+// components/LoadingScreen.tsx - COMPLETE HYDRATION-SAFE VERSION
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -26,7 +26,7 @@ interface FloatingElement {
 }
 
 const EpicLoadingScreen = () => {
-  const { shouldReduceEffects, isDesktop, isMobile, shouldEnableFullEffects } = useMobileOptimization();
+  const { shouldReduceEffects, isDesktop, isMobile, shouldEnableFullEffects, hasMounted } = useMobileOptimization();
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState('Initializing...');
@@ -45,9 +45,11 @@ const EpicLoadingScreen = () => {
   ];
 
   useEffect(() => {
+    // Only run client-side detection
+    if (!hasMounted) return;
+
     // Generate particles and floating elements based on device capability
     if (shouldEnableFullEffects) {
-      // Desktop - Full epic experience
       const particleData = Array.from({ length: 50 }, (_, i) => ({
         id: i,
         x: Math.random() * 100,
@@ -70,7 +72,6 @@ const EpicLoadingScreen = () => {
       }));
       setFloatingElements(floatingData);
     } else if (!shouldReduceEffects && !isMobile) {
-      // Tablet - Moderate effects
       const particleData = Array.from({ length: 25 }, (_, i) => ({
         id: i,
         x: Math.random() * 100,
@@ -118,7 +119,12 @@ const EpicLoadingScreen = () => {
     }, shouldReduceEffects ? 100 : 180);
 
     return () => clearInterval(progressInterval);
-  }, [shouldEnableFullEffects, shouldReduceEffects, isMobile]);
+  }, [shouldEnableFullEffects, shouldReduceEffects, isMobile, hasMounted]);
+
+  // Prevent rendering until client detection is complete
+  if (!hasMounted) {
+    return null;
+  }
 
   // Mobile version - Clean and fast
   if (shouldReduceEffects) {
@@ -132,7 +138,6 @@ const EpicLoadingScreen = () => {
             className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-900 via-purple-900/20 to-black flex items-center justify-center"
           >
             <div className="text-center space-y-6">
-              {/* Simple logo */}
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -142,10 +147,8 @@ const EpicLoadingScreen = () => {
                 <span className="text-white font-bold text-2xl">R</span>
               </motion.div>
 
-              {/* Minimal spinner */}
               <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto" />
 
-              {/* Progress text */}
               <motion.div
                 key={currentStep}
                 initial={{ opacity: 0, y: 10 }}
@@ -165,7 +168,6 @@ const EpicLoadingScreen = () => {
     );
   }
 
-  // Desktop/Tablet - Epic experience
   return (
     <AnimatePresence>
       {loading && (
@@ -194,10 +196,10 @@ const EpicLoadingScreen = () => {
             className="absolute inset-0"
             animate={{
               background: [
-                "radial-gradient(600px circle at 20% 30%, rgba(139, 92, 246, 0.4), transparent 50%)",
-                "radial-gradient(600px circle at 80% 70%, rgba(6, 182, 212, 0.4), transparent 50%)",
-                "radial-gradient(600px circle at 40% 90%, rgba(236, 72, 153, 0.4), transparent 50%)",
-                "radial-gradient(600px circle at 20% 30%, rgba(139, 92, 246, 0.4), transparent 50%)"
+                "radial-gradient(600px circle at 20% 30%, rgba(139, 92, 246, 0.4) 0%, transparent 50%)",
+                "radial-gradient(600px circle at 80% 70%, rgba(6, 182, 212, 0.4) 0%, transparent 50%)",
+                "radial-gradient(600px circle at 40% 90%, rgba(236, 72, 153, 0.4) 0%, transparent 50%)",
+                "radial-gradient(600px circle at 20% 30%, rgba(139, 92, 246, 0.4) 0%, transparent 50%)"
               ]
             }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
@@ -276,8 +278,6 @@ const EpicLoadingScreen = () => {
           {/* Main content */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center max-w-lg mx-auto px-6">
-
-              {/* Epic logo with complex animation */}
               <motion.div
                 initial={{ scale: 0, rotate: -180, opacity: 0 }}
                 animate={{ scale: 1, rotate: 0, opacity: 1 }}
@@ -289,7 +289,6 @@ const EpicLoadingScreen = () => {
                 className="mb-12 relative"
               >
                 <div className="relative mx-auto w-32 h-32 group">
-                  {/* Outer rotating ring */}
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
@@ -306,14 +305,12 @@ const EpicLoadingScreen = () => {
                     <div className="w-full h-full rounded-full bg-black" />
                   </motion.div>
 
-                  {/* Middle ring */}
                   <motion.div
                     animate={{ rotate: -360 }}
                     transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
                     className="absolute inset-2 rounded-full border-2 border-cyan-400/50"
                   />
 
-                  {/* Inner core */}
                   <motion.div
                     animate={{
                       scale: [1, 1.1, 1],
@@ -351,7 +348,6 @@ const EpicLoadingScreen = () => {
                     </motion.span>
                   </motion.div>
 
-                  {/* Pulse rings */}
                   {[...Array(3)].map((_, i) => (
                     <motion.div
                       key={i}
@@ -371,7 +367,6 @@ const EpicLoadingScreen = () => {
                 </div>
               </motion.div>
 
-              {/* Epic title */}
               <motion.div
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -410,14 +405,12 @@ const EpicLoadingScreen = () => {
                 </motion.p>
               </motion.div>
 
-              {/* Enhanced progress section */}
               <motion.div
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1, duration: 0.8 }}
                 className="mt-12 space-y-6"
               >
-                {/* Progress bar with multiple layers */}
                 <div className="relative">
                   <div
                     className="relative w-full h-3 rounded-full overflow-hidden border border-white/20"
@@ -426,7 +419,6 @@ const EpicLoadingScreen = () => {
                       backdropFilter: 'blur(10px)',
                     }}
                   >
-                    {/* Progress fill */}
                     <motion.div
                       className="h-full rounded-full relative"
                       style={{
@@ -439,7 +431,6 @@ const EpicLoadingScreen = () => {
                       }}
                       transition={{ duration: 0.5, ease: "easeOut" }}
                     >
-                      {/* Animated shine effect */}
                       <motion.div
                         className="absolute inset-0 rounded-full"
                         style={{
@@ -460,7 +451,6 @@ const EpicLoadingScreen = () => {
                     </motion.div>
                   </div>
 
-                  {/* Progress glow */}
                   <motion.div
                     className="absolute inset-0 rounded-full"
                     style={{
@@ -474,7 +464,6 @@ const EpicLoadingScreen = () => {
                   />
                 </div>
 
-                {/* Status text */}
                 <div className="flex justify-between items-center">
                   <motion.div
                     key={currentStep}
@@ -510,7 +499,6 @@ const EpicLoadingScreen = () => {
                 </div>
               </motion.div>
 
-              {/* Pulsing dots */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -538,7 +526,6 @@ const EpicLoadingScreen = () => {
                 ))}
               </motion.div>
 
-              {/* Welcome message */}
               <AnimatePresence>
                 {showWelcome && (
                   <motion.div
@@ -561,10 +548,8 @@ const EpicLoadingScreen = () => {
             </div>
           </div>
 
-          {/* Corner decorations */}
           {shouldEnableFullEffects && (
             <>
-              {/* Top left */}
               <motion.div
                 className="absolute top-8 left-8 w-16 h-16 border-l-2 border-t-2 border-purple-400/30"
                 animate={{
@@ -573,7 +558,6 @@ const EpicLoadingScreen = () => {
                 transition={{ duration: 3, repeat: Infinity }}
               />
 
-              {/* Bottom right */}
               <motion.div
                 className="absolute bottom-8 right-8 w-16 h-16 border-r-2 border-b-2 border-cyan-400/30"
                 animate={{
@@ -583,7 +567,6 @@ const EpicLoadingScreen = () => {
               />
             </>
           )}
-
         </motion.div>
       )}
     </AnimatePresence>

@@ -1,4 +1,4 @@
-// page.tsx - UPDATED WITH FIXED COMPONENTS
+// page.tsx - COMPLETE HYDRATION-SAFE VERSION
 "use client";
 
 import Navigation from "./components/Navigation";
@@ -10,68 +10,64 @@ import Projects from "./components/Projects";
 import Contact from "./components/Contact";
 import CursorBlob from "./components/CursorBlob";
 import ScrollProgress from "./components/ScrollProgress";
-import EpicLoadingScreen from "./components/LoadingScreen"; // Updated import
+import EpicLoadingScreen from "./components/LoadingScreen";
 import PerformanceOptimizer from "./components/PerformanceOptimizer";
 import SmoothScroll from "./components/SmoothScroll";
 import AnimatedBackground from "./components/AnimatedBackground";
 import { useMobileOptimization } from "./hooks/useMobileOptimization";
 
 export default function Home() {
-  const { isMobile, isDesktop, shouldReduceEffects, shouldEnableFullEffects, deviceType } = useMobileOptimization();
-
-  // Debug logging to help track device detection
-  if (typeof window !== 'undefined') {
-    console.log('Device Detection Debug:', {
-      deviceType,
-      isMobile,
-      isDesktop,
-      shouldReduceEffects,
-      shouldEnableFullEffects,
-      screenWidth: window.innerWidth,
-      userAgent: navigator.userAgent.substring(0, 100) + '...'
-    });
-  }
+  const {
+    isMobile,
+    isDesktop,
+    shouldReduceEffects,
+    shouldEnableFullEffects,
+    deviceType,
+    hasMounted
+  } = useMobileOptimization();
 
   return (
     <SmoothScroll>
       <div className="relative min-h-screen overflow-x-hidden">
-        {/* Epic Loading Screen - Now properly differentiated by device */}
+        {/* Epic Loading Screen - Hydration safe */}
         <EpicLoadingScreen />
 
         <PerformanceOptimizer>
-          {/* Enhanced Animated Background - Now with proper 3D-like effects */}
-          <AnimatedBackground />
+          {/* Enhanced Animated Background - Only render when ready */}
+          {hasMounted && <AnimatedBackground />}
 
-          {/* Scroll Progress Bar - Always show but adapt style */}
-          <ScrollProgress />
+          {/* Scroll Progress Bar */}
+          {hasMounted && <ScrollProgress />}
 
           {/* Cursor Blob - Desktop only */}
-          {isDesktop && <CursorBlob />}
+          {hasMounted && isDesktop && <CursorBlob />}
 
           {/* Navigation */}
-          <Navigation />
+          {hasMounted && <Navigation />}
 
-          {/* Main Content with proper optimization classes */}
-          <main
-            className={`relative z-10 ${
-              isMobile ? 'mobile-optimized' :
-              shouldEnableFullEffects ? 'performance-optimized gpu-accelerated' :
-              ''
-            }`}
-          >
-            <Hero />
-            <Overview />
-            <WorkExperience />
-            <Skills />
-            <Projects />
-            <Contact />
-          </main>
+          {/* Main Content */}
+          {hasMounted && (
+            <main
+              className={`relative z-10 ${
+                isMobile ? 'mobile-optimized' :
+                shouldEnableFullEffects ? 'performance-optimized gpu-accelerated' :
+                ''
+              }`}
+            >
+              <Hero />
+              <Overview />
+              <WorkExperience />
+              <Skills />
+              <Projects />
+              <Contact />
+            </main>
+          )}
 
-          {/* Device-specific optimizations indicator (remove in production) */}
-          {process.env.NODE_ENV === 'development' && (
+          {/* Debug indicator - only in development */}
+          {process.env.NODE_ENV === 'development' && hasMounted && (
             <div className="fixed bottom-4 left-4 z-50 p-2 bg-black/80 text-white text-xs rounded font-mono">
               <div>Device: {deviceType}</div>
-              <div>Screen: {typeof window !== 'undefined' ? window.innerWidth : 'N/A'}px</div>
+              <div>Screen: {window.innerWidth}px</div>
               <div>Effects: {shouldEnableFullEffects ? 'Full' : shouldReduceEffects ? 'Reduced' : 'Standard'}</div>
             </div>
           )}
