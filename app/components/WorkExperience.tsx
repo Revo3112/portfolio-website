@@ -260,7 +260,7 @@ const WorkExperience = () => {
                               initial={{ opacity: 0, x: -20 }}
                               animate={cardInView ? { opacity: 1, x: 0 } : {}}
                               transition={{ delay: 0.1 * i + 0.5 }}
-                              className="text-gray-200 flex items-start gap-3 text-sm leading-relaxed hover:text-white transition-colors duration-300"
+                              className="text-gray-200 flex items-start gap-3 text-base md:text-lg lg:text-xl leading-relaxed hover:text-white transition-colors duration-300"
                             >
                               <div className={`w-5 h-5 rounded-full bg-gradient-to-r ${exp.gradient} bg-opacity-30 flex items-center justify-center mt-1 flex-shrink-0`}>
                                 <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
