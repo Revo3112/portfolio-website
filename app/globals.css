@@ -514,41 +514,6 @@
 
 /* Device-specific optimizations */
 
-/* ALWAYS respect accessibility preferences - HIGHEST PRIORITY */
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --animation-fast: 0.01ms;
-    --animation-normal: 0.01ms;
-    --animation-slow: 0.01ms;
-    --animation-epic: 0.01ms;
-  }
-
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .lenis {
-    scroll-behavior: auto !important;
-  }
-
-  .animate-pulse,
-  .animate-bounce,
-  .animate-spin,
-  .animate-float,
-  .animate-pulse-glow,
-  .animate-shimmer,
-  .animate-epic-pulse,
-  .animate-particle-float,
-  .animate-geometric-rotate,
-  .animate-gradient-shift,
-  .animate-breathe {
-    animation: none !important;
-  }
-}
-
 @media (prefers-contrast: high) {
   .glass {
     background: rgba(255, 255, 255, 0.15);
