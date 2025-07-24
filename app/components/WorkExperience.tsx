@@ -4,11 +4,10 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useMemo } from "react";
 import { Calendar, MapPin, Briefcase, ExternalLink, Building } from "lucide-react";
-import { useInView as useInViewObserver } from "react-intersection-observer";
 
 const WorkExperience = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   const experiences = useMemo(() => [
     {
@@ -85,18 +84,18 @@ const WorkExperience = () => {
   return (
     <section id="work" className="py-20 relative overflow-hidden">
       <div className="container mx-auto px-6 relative z-10">
-        {/* Header Section */}
+        {/* Header Section - Instant */}
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="text-center mb-20"
         >
           <motion.p
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
             className="text-purple-400 mb-4 uppercase tracking-wider text-sm font-medium"
           >
             WHAT I HAVE DONE SO FAR
@@ -104,7 +103,7 @@ const WorkExperience = () => {
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
             className="text-4xl md:text-6xl font-bold mb-6"
           >
             Work Experience<span className="gradient-text">.</span>
@@ -112,105 +111,81 @@ const WorkExperience = () => {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
             className="text-gray-400 text-lg max-w-3xl mx-auto leading-relaxed"
           >
             Following projects showcases my professional journey through various roles, showcasing growth and impact across different domains in technology and education.
           </motion.p>
         </motion.div>
 
-        {/* Timeline Container - CLEAN POSITIONING */}
+        {/* Timeline Container */}
         <div className="relative max-w-none mx-auto">
-          {/* Vertical Timeline Line - EXACT CENTER */}
+          {/* Vertical Timeline Line */}
           <div
             className="absolute w-0.5 h-full bg-gradient-to-b from-purple-500/50 via-cyan-500/50 to-orange-500/50 hidden md:block"
-            style={{
-              left: '50%',
-              transform: 'translateX(-1px)', // Matching the exact positioning
-              zIndex: 1
-            }}
-          ></div>
+            style={{ left: '50%', transform: 'translateX(-1px)', zIndex: 1 }}
+          />
 
-          {/* Experience Cards */}
+          {/* Experience Cards - Instant Animation */}
           {experiences.map((exp, index) => {
-            const [cardRef, cardInView] = useInViewObserver({
-              threshold: 0.2,
-              triggerOnce: true,
-            });
-
             const isLeft = index % 2 === 0;
 
             return (
               <motion.div
                 key={exp.id}
-                ref={cardRef}
-                initial={{ opacity: 0, x: isLeft ? -100 : 100 }}
-                animate={cardInView ? { opacity: 1, x: 0 } : {}}
+                initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 transition={{
-                  duration: 0.6,
-                  delay: index * 0.2,
+                  duration: 0.3,
+                  delay: 0,
                   ease: "easeOut"
+                }}
+                viewport={{
+                  once: true,
+                  amount: 0.05,
+                  margin: "-50px"
                 }}
                 className={`relative flex items-start mb-20 ${
                   isLeft ? 'md:flex-row' : 'md:flex-row-reverse'
                 } flex-col`}
               >
-                {/* Timeline Node - PERFECTLY ALIGNED WITH VERTICAL LINE */}
+                {/* Timeline Node - Instant */}
                 <motion.div
                   initial={{ scale: 0 }}
-                  animate={cardInView ? { scale: 1 } : {}}
+                  whileInView={{ scale: 1 }}
                   transition={{
-                    duration: 0.5,
-                    delay: index * 0.2 + 0.3,
+                    duration: 0.3,
+                    delay: 0,
                     type: "spring",
-                    stiffness: 200
+                    stiffness: 300
                   }}
-                  className={`bg-gradient-to-r ${exp.gradient} rounded-full border-4 border-background shadow-lg hidden md:block gpu-optimized`}
+                  viewport={{ once: true, amount: 0.1 }}
+                  className={`absolute bg-gradient-to-r ${exp.gradient} rounded-full border-4 border-background shadow-lg hidden md:block`}
                   style={{
-                    position: 'absolute',
                     width: '40px',
                     height: '40px',
-                    left: 'calc(50% - 21px)', // More explicit calculation: 50% - 1px (line offset) - 20px (half circle)
+                    left: 'calc(50% - 20px)',
                     top: '140px',
-                    transform: 'none', // Remove transform to avoid conflicts
-                    zIndex: 10,
-                    margin: '0',
-                    padding: '0',
-                    boxShadow: `0 0 20px ${exp.gradient.includes('purple') ? 'rgba(139, 92, 246, 0.4)' :
-                                         exp.gradient.includes('cyan') ? 'rgba(6, 182, 212, 0.4)' :
-                                         exp.gradient.includes('emerald') ? 'rgba(16, 185, 129, 0.4)' :
-                                         'rgba(251, 146, 60, 0.4)'}`
+                    zIndex: 10
                   }}
                 />
 
-                {/* Card Content - NO INTERFERENCE */}
+                {/* Card Content */}
                 <div className={`w-full md:w-5/12 ${isLeft ? 'md:pr-8' : 'md:pl-8'}`}>
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={cardInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.5, delay: index * 0.2 + 0.4 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0 }}
+                    viewport={{ once: true, amount: 0.1 }}
                     className="group relative"
                   >
-                    {/* Card - ENHANCED DESIGN WITH BALANCED SIZE */}
-                    <div className={`relative glass-effect rounded-3xl border ${exp.borderColor} p-8 transition-all duration-500 hover:bg-white/10 hover:border-opacity-80 hover:shadow-2xl min-h-[550px] group-hover:scale-[1.02] gpu-optimized perspective-1000`}
-                         style={{
-                           background: 'rgba(255, 255, 255, 0.03)',
-                           backdropFilter: 'blur(20px)',
-                           WebkitBackdropFilter: 'blur(20px)',
-                           boxShadow: `0 8px 32px ${exp.gradient.includes('purple') ? 'rgba(139, 92, 246, 0.1)' :
-                                               exp.gradient.includes('cyan') ? 'rgba(6, 182, 212, 0.1)' :
-                                               exp.gradient.includes('emerald') ? 'rgba(16, 185, 129, 0.1)' :
-                                               'rgba(251, 146, 60, 0.1)'}`
-                         }}>
-                      {/* Header - BALANCED STYLING */}
+                    <div className={`relative glass-effect rounded-3xl border ${exp.borderColor} p-8 transition-all duration-500 min-h-[550px]`}>
+                      {/* Header */}
                       <div className="flex items-start justify-between mb-6">
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-3">
-                            <h3 className="text-2xl lg:text-3xl font-bold text-white leading-tight">
-                              {exp.title}
-                            </h3>
-                          </div>
-
+                          <h3 className="text-2xl lg:text-3xl font-bold text-white mb-3">
+                            {exp.title}
+                          </h3>
                           <div className="flex items-center gap-3 mb-4">
                             <div className={`p-2 rounded-xl bg-gradient-to-r ${exp.gradient} bg-opacity-20`}>
                               <Building className="w-5 h-5 text-white" />
@@ -219,8 +194,6 @@ const WorkExperience = () => {
                               {exp.company}
                             </p>
                           </div>
-
-                          {/* Meta Information - BALANCED */}
                           <div className="flex flex-wrap gap-6 text-gray-300 text-sm mb-6">
                             <span className="flex items-center gap-2">
                               <Calendar className="w-4 h-4 text-purple-400" />
@@ -232,20 +205,12 @@ const WorkExperience = () => {
                             </span>
                           </div>
                         </div>
-
-                        {/* Number Badge - BALANCED SIZE */}
-                        <div className={`w-14 h-14 bg-gradient-to-r ${exp.gradient} rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-2xl transform hover:scale-110 transition-all duration-300 gpu-optimized`}
-                             style={{
-                               boxShadow: `0 8px 25px ${exp.gradient.includes('purple') ? 'rgba(139, 92, 246, 0.4)' :
-                                                   exp.gradient.includes('cyan') ? 'rgba(6, 182, 212, 0.4)' :
-                                                   exp.gradient.includes('emerald') ? 'rgba(16, 185, 129, 0.4)' :
-                                                   'rgba(251, 146, 60, 0.4)'}`
-                             }}>
+                        <div className={`w-14 h-14 bg-gradient-to-r ${exp.gradient} rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-2xl`}>
                           {exp.id}
                         </div>
                       </div>
 
-                      {/* Description - BALANCED LAYOUT */}
+                      {/* Description */}
                       <div className="mb-6">
                         <h4 className="text-white font-bold mb-4 text-lg flex items-center gap-3">
                           <div className={`w-6 h-6 rounded-lg bg-gradient-to-r ${exp.gradient} bg-opacity-20 flex items-center justify-center`}>
@@ -258,22 +223,21 @@ const WorkExperience = () => {
                             <motion.li
                               key={i}
                               initial={{ opacity: 0, x: -20 }}
-                              animate={cardInView ? { opacity: 1, x: 0 } : {}}
-                              transition={{ delay: 0.1 * i + 0.5 }}
-                              className="text-gray-200 flex items-start gap-3 text-base md:text-lg lg:text-xl leading-relaxed hover:text-white transition-colors duration-300"
+                              whileInView={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.3, delay: i * 0.1 }}
+                              viewport={{ once: true }}
+                              className="text-gray-200 flex items-start gap-3 text-base md:text-lg lg:text-xl leading-relaxed"
                             >
                               <div className={`w-5 h-5 rounded-full bg-gradient-to-r ${exp.gradient} bg-opacity-30 flex items-center justify-center mt-1 flex-shrink-0`}>
                                 <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
                               </div>
-                              <span className="leading-relaxed font-medium">
-                                {item}
-                              </span>
+                              <span className="leading-relaxed font-medium">{item}</span>
                             </motion.li>
                           ))}
                         </ul>
                       </div>
 
-                      {/* Skills - BALANCED DESIGN */}
+                      {/* Skills */}
                       <div>
                         <h4 className="text-white font-bold mb-3 text-sm flex items-center gap-2">
                           <div className={`w-6 h-6 rounded-lg bg-gradient-to-r ${exp.gradient} bg-opacity-20 flex items-center justify-center`}>
@@ -286,15 +250,10 @@ const WorkExperience = () => {
                             <motion.span
                               key={i}
                               initial={{ opacity: 0, scale: 0.8 }}
-                              animate={cardInView ? { opacity: 1, scale: 1 } : {}}
-                              transition={{ delay: 0.1 * i + 0.7 }}
-                              className={`px-3 py-2 text-xs font-semibold bg-gradient-to-r ${exp.gradient} bg-opacity-15 ${exp.accentColor} rounded-lg border ${exp.borderColor} backdrop-blur-sm transition-all duration-300 hover:bg-opacity-25 hover:scale-105 cursor-default gpu-optimized`}
-                              style={{
-                                boxShadow: `0 4px 15px ${exp.gradient.includes('purple') ? 'rgba(139, 92, 246, 0.1)' :
-                                                    exp.gradient.includes('cyan') ? 'rgba(6, 182, 212, 0.1)' :
-                                                    exp.gradient.includes('emerald') ? 'rgba(16, 185, 129, 0.1)' :
-                                                    'rgba(251, 146, 60, 0.1)'}`
-                              }}
+                              whileInView={{ opacity: 1, scale: 1 }}
+                              transition={{ duration: 0.3, delay: i * 0.1 }}
+                              viewport={{ once: true }}
+                              className={`px-3 py-2 text-xs font-semibold bg-gradient-to-r ${exp.gradient} bg-opacity-15 ${exp.accentColor} rounded-lg border ${exp.borderColor} backdrop-blur-sm`}
                             >
                               {skill}
                             </motion.span>
@@ -302,24 +261,9 @@ const WorkExperience = () => {
                         </div>
                       </div>
                     </div>
-
-                    {/* Arrow pointing to timeline - PERFECT ALIGNMENT */}
-                    <div className={`absolute w-0 h-0 hidden md:block transition-all duration-300 ${
-                      isLeft
-                        ? 'right-0 border-l-12 border-l-white/15 border-y-12 border-y-transparent hover:border-l-white/25'
-                        : 'left-0 border-r-12 border-r-white/15 border-y-12 border-y-transparent hover:border-r-white/25'
-                    }`} style={{
-                      top: '140px',
-                      transform: `translateY(-50%) ${isLeft ? 'translateX(100%)' : 'translateX(-100%)'}`,
-                      filter: `drop-shadow(0 0 8px ${exp.gradient.includes('purple') ? 'rgba(139, 92, 246, 0.3)' :
-                                                 exp.gradient.includes('cyan') ? 'rgba(6, 182, 212, 0.3)' :
-                                                 exp.gradient.includes('emerald') ? 'rgba(16, 185, 129, 0.3)' :
-                                                 'rgba(251, 146, 60, 0.3)'})`
-                    }} />
                   </motion.div>
                 </div>
 
-                {/* Empty space for the other side - CLEAN */}
                 <div className="hidden md:block w-5/12" />
               </motion.div>
             );
