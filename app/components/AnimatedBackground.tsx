@@ -1,187 +1,401 @@
+// components/AnimatedBackground.tsx - ENHANCED WITH PSEUDO-3D OBJECTS
 "use client";
 
 import { motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
+import { useMobileOptimization } from "../hooks/useMobileOptimization";
+
+interface Particle {
+  id: number;
+  x: number;
+  y: number;
+  z: number;
+  size: number;
+  duration: number;
+  delay: number;
+  color: string;
+  rotationSpeed: number;
+}
+
+interface FloatingShape {
+  id: number;
+  x: number;
+  y: number;
+  size: number;
+  rotation: number;
+  duration: number;
+  delay: number;
+  shape: 'circle' | 'square' | 'triangle' | 'diamond';
+}
+
+interface PseudoObject {
+  id: number;
+  x: number;
+  y: number;
+  z: number; // Depth layer
+  width: number;
+  height: number;
+  rotation: number;
+  duration: number;
+  delay: number;
+  type: 'hexagon' | 'ring' | 'cross' | 'spiral' | 'wave' | 'grid';
+  opacity: number;
+  color: string;
+}
+
+interface OrbitingElement {
+  id: number;
+  centerX: number;
+  centerY: number;
+  radius: number;
+  angle: number;
+  size: number;
+  duration: number;
+  delay: number;
+}
 
 const AnimatedBackground = () => {
+  const { shouldReduceEffects, isDesktop, isMobile, shouldEnableFullEffects } = useMobileOptimization();
   const [isClient, setIsClient] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
-  // Ensure we're on the client side to avoid hydration mismatch
   useEffect(() => {
     setIsClient(true);
-
-    // Check for reduced motion preference
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    const handler = () => setPrefersReducedMotion(mediaQuery.matches);
-    mediaQuery.addEventListener('change', handler);
-
-    return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
-  // Generate deterministic positions for particles to avoid hydration mismatch
+  // Enhanced particle system with 3D-like movement
   const particles = useMemo(() => {
     if (!isClient) return [];
 
-    // Reduce particle count for better performance
-    return [...Array(prefersReducedMotion ? 10 : 20)].map((_, i) => {
-      // Use index-based deterministic values to avoid Math.random() hydration issues
-      const seed = i * 0.618033988749; // Golden ratio for better distribution
-      const x = ((seed * 100) % 100);
-      const y = (((seed + 0.1) * 100) % 100);
-      const size = ((seed * 4) % 3) + 1.5;
-      const duration = prefersReducedMotion ? 10 : ((seed * 3) % 2) + 2.5;
-      const delay = ((seed * 5) % 4) + 1;
-
-      return {
+    if (shouldReduceEffects) {
+      // Mobile - minimal particles
+      return [...Array(5)].map((_, i) => ({
         id: i,
-        x,
-        y,
-        size,
-        duration,
-        delay,
+        x: (i * 25) % 100,
+        y: (i * 30) % 100,
+        z: i * 10,
+        size: 2,
+        duration: 4 + (i % 2),
+        delay: i * 0.5,
+        color: i % 2 === 0 ? 'purple' : 'cyan',
+        rotationSpeed: 0.5
+      }));
+    }
+
+    if (shouldEnableFullEffects) {
+      // Desktop - epic particle system
+      return [...Array(40)].map((_, i) => ({
+        id: i,
+        x: (i * 61.8) % 100,
+        y: ((i * 61.8) + 10) % 100,
+        z: (i * 23) % 200,
+        size: ((i * 4) % 4) + 1.5,
+        duration: ((i * 3) % 3) + 2.5,
+        delay: ((i * 5) % 6) + 1,
+        color: ['purple', 'cyan', 'pink', 'blue'][i % 4],
+        rotationSpeed: (i % 3) + 1
+      }));
+    }
+
+    // Tablet - moderate particles
+    return [...Array(20)].map((_, i) => ({
+      id: i,
+      x: (i * 61.8) % 100,
+      y: ((i * 61.8) + 10) % 100,
+      z: (i * 15) % 100,
+      size: ((i * 3) % 3) + 1.5,
+      duration: ((i * 2) % 2) + 3,
+      delay: ((i * 4) % 4) + 1,
+      color: ['purple', 'cyan'][i % 2],
+      rotationSpeed: 1
+    }));
+  }, [isClient, shouldReduceEffects, shouldEnableFullEffects]);
+
+  // NEW: Pseudo-3D Objects for depth illusion
+  const pseudoObjects = useMemo(() => {
+    if (!isClient || shouldReduceEffects) return [];
+
+    const objectCount = shouldEnableFullEffects ? 15 : 8;
+    const types: PseudoObject['type'][] = ['hexagon', 'ring', 'cross', 'spiral', 'wave', 'grid'];
+    const colors = ['purple', 'cyan', 'pink', 'blue', 'emerald'];
+
+    return [...Array(objectCount)].map((_, i) => ({
+      id: i,
+      x: (i * 73.6) % 85 + 7.5,
+      y: (i * 41.2) % 85 + 7.5,
+      z: (i * 37) % 300 + 50, // Depth from 50-350
+      width: ((i * 11) % 60) + 80,
+      height: ((i * 13) % 60) + 80,
+      rotation: (i * 67) % 360,
+      duration: ((i * 7) % 12) + 15, // Slower, more majestic movement
+      delay: (i * 3) % 8,
+      type: types[i % types.length],
+      opacity: Math.max(0.15 - (((i * 37) % 300 + 50) / 300) * 0.12, 0.03), // Farther = more transparent
+      color: colors[i % colors.length]
+    }));
+  }, [isClient, shouldReduceEffects, shouldEnableFullEffects]);
+
+  // NEW: Orbiting elements for dynamic movement
+  const orbitingElements = useMemo(() => {
+    if (!isClient || shouldReduceEffects) return [];
+
+    const elementCount = shouldEnableFullEffects ? 8 : 4;
+
+    return [...Array(elementCount)].map((_, i) => ({
+      id: i,
+      centerX: (i % 2 === 0) ? 25 : 75,
+      centerY: (i < elementCount / 2) ? 25 : 75,
+      radius: ((i * 19) % 150) + 100,
+      angle: (i * 45) % 360,
+      size: ((i * 7) % 8) + 4,
+      duration: ((i * 5) % 15) + 20,
+      delay: i * 2.5
+    }));
+  }, [isClient, shouldReduceEffects, shouldEnableFullEffects]);
+
+  // Floating geometric shapes for mid-ground
+  const floatingShapes = useMemo(() => {
+    if (!isClient || shouldReduceEffects) return [];
+
+    const shapeCount = shouldEnableFullEffects ? 12 : 6;
+    const shapes: ('circle' | 'square' | 'triangle' | 'diamond')[] = ['circle', 'square', 'triangle', 'diamond'];
+
+    return [...Array(shapeCount)].map((_, i) => ({
+      id: i,
+      x: (i * 83.7) % 90 + 5,
+      y: (i * 47.3) % 90 + 5,
+      size: ((i * 7) % 30) + 40,
+      rotation: (i * 45) % 360,
+      duration: ((i * 4) % 6) + 8,
+      delay: (i * 2) % 4,
+      shape: shapes[i % shapes.length]
+    }));
+  }, [isClient, shouldReduceEffects, shouldEnableFullEffects]);
+
+  if (!isClient) return null;
+
+  const particleColors = {
+    purple: 'rgba(139, 92, 246, 0.6)',
+    cyan: 'rgba(6, 182, 212, 0.6)',
+    pink: 'rgba(236, 72, 153, 0.6)',
+    blue: 'rgba(59, 130, 246, 0.6)',
+    emerald: 'rgba(16, 185, 129, 0.6)'
+  };
+
+  // Pseudo-3D Object Component
+  const PseudoObjectComponent = ({ obj }: { obj: PseudoObject }) => {
+    const scale = 1 - (obj.z / 500); // Objects farther away are smaller
+    const blur = obj.z / 100; // Objects farther away are blurred
+    const baseColor = particleColors[obj.color as keyof typeof particleColors];
+
+    const renderShape = () => {
+      const commonStyles = {
+        width: '100%',
+        height: '100%',
+        background: `linear-gradient(135deg, ${baseColor}, transparent)`,
+        border: `1px solid ${baseColor}`,
+        filter: `blur(${blur}px)`,
+        opacity: obj.opacity
       };
-    });
-  }, [isClient, prefersReducedMotion]);  return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden transform-gpu">
+
+      switch (obj.type) {
+        case 'hexagon':
+          return (
+            <div
+              style={{
+                ...commonStyles,
+                clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'
+              }}
+            />
+          );
+        case 'ring':
+          return (
+            <div style={commonStyles} className="rounded-full relative">
+              <div
+                className="absolute inset-4 rounded-full"
+                style={{ background: 'var(--background)' }}
+              />
+            </div>
+          );
+        case 'cross':
+          return (
+            <div style={commonStyles} className="relative">
+              <div className="absolute inset-y-0 left-1/2 w-px transform -translate-x-1/2" style={{ background: baseColor }} />
+              <div className="absolute inset-x-0 top-1/2 h-px transform -translate-y-1/2" style={{ background: baseColor }} />
+            </div>
+          );
+        case 'spiral':
+          return (
+            <div style={commonStyles} className="rounded-full relative overflow-hidden">
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: `conic-gradient(from 0deg, transparent, ${baseColor}, transparent)`
+                }}
+              />
+            </div>
+          );
+        case 'wave':
+          return (
+            <div style={commonStyles} className="relative overflow-hidden">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `repeating-linear-gradient(45deg, ${baseColor}, transparent 10px, ${baseColor} 20px)`
+                }}
+              />
+            </div>
+          );
+        case 'grid':
+          return (
+            <div style={commonStyles} className="relative">
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(${baseColor} 1px, transparent 1px),
+                    linear-gradient(90deg, ${baseColor} 1px, transparent 1px)
+                  `,
+                  backgroundSize: '20% 20%'
+                }}
+              />
+            </div>
+          );
+        default:
+          return <div style={commonStyles} className="rounded-lg" />;
+      }
+    };
+
+    return (
+      <motion.div
+        className="absolute"
+        style={{
+          left: `${obj.x}%`,
+          top: `${obj.y}%`,
+          width: `${obj.width * scale}px`,
+          height: `${obj.height * scale}px`,
+          zIndex: Math.floor(10 - obj.z / 35) // Farther objects behind closer ones
+        }}
+        animate={{
+          x: [0, Math.sin(obj.id * 0.7) * 80, Math.cos(obj.id * 0.5) * 60, 0],
+          y: [0, Math.cos(obj.id * 0.8) * 50, Math.sin(obj.id * 0.6) * 40, 0],
+          rotate: [obj.rotation, obj.rotation + 180, obj.rotation + 360],
+          scale: [scale * 0.9, scale * 1.1, scale * 0.9]
+        }}
+        transition={{
+          duration: obj.duration,
+          repeat: Infinity,
+          delay: obj.delay,
+          ease: "easeInOut"
+        }}
+      >
+        {renderShape()}
+      </motion.div>
+    );
+  };
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
       {/* Base gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background-secondary/30 to-background-tertiary/20" />
 
-      {/* Animated gradient overlay - reduced complexity for performance */}
-      <motion.div
-        className="absolute inset-0 transform-gpu"
-        animate={prefersReducedMotion ? {} : {
-          background: [
-            "linear-gradient(45deg, rgba(139, 92, 246, 0.06), transparent, rgba(6, 182, 212, 0.06))",
-            "linear-gradient(135deg, rgba(6, 182, 212, 0.06), transparent, rgba(139, 92, 246, 0.06))",
-            "linear-gradient(45deg, rgba(139, 92, 246, 0.06), transparent, rgba(6, 182, 212, 0.06))"
-          ]
-        }}
-        transition={{
-          duration: prefersReducedMotion ? 0 : 25,
-          repeat: prefersReducedMotion ? 0 : Infinity,
-          ease: "linear"
-        }}
-      />
+      {/* Enhanced gradient animations for desktop */}
+      {shouldEnableFullEffects && (
+        <>
+          {/* Primary animated gradient */}
+          <motion.div
+            className="absolute inset-0"
+            animate={{
+              background: [
+                "radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%)",
+                "radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%)",
+                "radial-gradient(ellipse at 50% 10%, rgba(236, 72, 153, 0.15) 0%, transparent 50%)",
+                "radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%)"
+              ]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          />
 
-      {/* Large floating blobs - optimized with transform-gpu */}
-      <motion.div
-        className="absolute top-10 left-10 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl transform-gpu"
-        animate={prefersReducedMotion ? {} : {
-          scale: [1, 1.2, 1],
-          x: [0, 30, 0],
-          y: [0, -20, 0],
-          opacity: [0.3, 0.5, 0.3]
-        }}
-        transition={{
-          duration: prefersReducedMotion ? 0 : 18,
-          repeat: prefersReducedMotion ? 0 : Infinity,
-          ease: "easeInOut"
-        }}
-      />
+          {/* Secondary gradient layer */}
+          <motion.div
+            className="absolute inset-0"
+            animate={{
+              background: [
+                "linear-gradient(45deg, rgba(139, 92, 246, 0.08), transparent, rgba(6, 182, 212, 0.08))",
+                "linear-gradient(135deg, rgba(6, 182, 212, 0.08), transparent, rgba(236, 72, 153, 0.08))",
+                "linear-gradient(225deg, rgba(236, 72, 153, 0.08), transparent, rgba(139, 92, 246, 0.08))",
+                "linear-gradient(315deg, rgba(139, 92, 246, 0.08), transparent, rgba(6, 182, 212, 0.08))"
+              ]
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          />
 
-      <motion.div
-        className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl transform-gpu"
-        animate={prefersReducedMotion ? {} : {
-          scale: [1, 0.8, 1],
-          x: [0, -40, 0],
-          y: [0, 30, 0],
-          opacity: [0.3, 0.6, 0.3]
-        }}
-        transition={{
-          duration: prefersReducedMotion ? 0 : 22,
-          repeat: prefersReducedMotion ? 0 : Infinity,
-          ease: "easeInOut",
-          delay: 3
-        }}
-      />
+          {/* Mesh gradient overlay */}
+          <motion.div
+            className="absolute inset-0 opacity-40"
+            style={{
+              background: `
+                radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(6, 182, 212, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 75% 25%, rgba(236, 72, 153, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 25% 75%, rgba(168, 85, 247, 0.4) 0%, transparent 50%)
+              `
+            }}
+            animate={{
+              opacity: [0.2, 0.4, 0.2],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </>
+      )}
 
-      <motion.div
-        className="absolute top-1/2 left-1/4 w-72 h-72 bg-purple-400/5 rounded-full blur-2xl"
-        animate={{
-          scale: [1, 1.2, 1],
-          rotate: [0, 180, 360],
-          opacity: [0.2, 0.4, 0.2]
-        }}
-        transition={{
-          duration: 18,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 4
-        }}
-      />
+      {/* NEW: Background Pseudo-3D Objects Layer (Furthest) */}
+      {pseudoObjects.length > 0 && (
+        <div className="absolute inset-0" style={{ zIndex: 1 }}>
+          {pseudoObjects.map((obj) => (
+            <PseudoObjectComponent key={obj.id} obj={obj} />
+          ))}
+        </div>
+      )}
 
-      {/* Geometric patterns */}
-      <motion.div
-        className="absolute top-1/4 right-1/3 w-40 h-40 border border-purple-500/15 rounded-3xl"
-        animate={{
-          rotate: [0, 360],
-          scale: [1, 1.2, 1],
-          borderRadius: ["24px", "50%", "24px"]
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "linear"
-        }}
-      />
-
-      <motion.div
-        className="absolute bottom-1/3 left-1/3 w-32 h-32 border-2 border-cyan-500/15 rounded-full"
-        animate={{
-          scale: [1, 1.5, 1],
-          opacity: [0.2, 0.5, 0.2],
-          rotate: [0, -360]
-        }}
-        transition={{
-          duration: 16,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-
-      {/* Hexagon shapes */}
-      <motion.div
-        className="absolute top-2/3 right-1/4 w-24 h-24 border border-purple-400/20"
-        style={{
-          clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)"
-        }}
-        animate={{
-          rotate: [0, 120, 240, 360],
-          scale: [1, 1.1, 1]
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-
-      {/* Floating particles - optimized with conditional rendering and GPU acceleration */}
-      {isClient && (
-        <div className="absolute inset-0">
-          {particles.map((particle) => (
+      {/* NEW: Orbiting Elements Layer */}
+      {orbitingElements.length > 0 && (
+        <div className="absolute inset-0" style={{ zIndex: 3 }}>
+          {orbitingElements.map((element) => (
             <motion.div
-              key={particle.id}
-              className="absolute rounded-full bg-gradient-to-r from-purple-400/20 to-cyan-400/20 transform-gpu"
+              key={element.id}
+              className="absolute rounded-full"
               style={{
-                left: `${particle.x}%`,
-                top: `${particle.y}%`,
-                width: `${particle.size}px`,
-                height: `${particle.size}px`,
-                willChange: prefersReducedMotion ? 'auto' : 'transform, opacity',
+                width: `${element.size}px`,
+                height: `${element.size}px`,
+                background: `radial-gradient(circle, rgba(139, 92, 246, 0.4), rgba(6, 182, 212, 0.2))`,
+                border: '1px solid rgba(139, 92, 246, 0.3)',
+                left: `${element.centerX}%`,
+                top: `${element.centerY}%`,
+                transformOrigin: 'center center'
               }}
-              animate={prefersReducedMotion ? {} : {
-                y: [0, -80, 0],
-                opacity: [0, 0.8, 0],
-                scale: [0, 1, 0],
+              animate={{
+                x: [
+                  Math.cos((element.angle * Math.PI) / 180) * element.radius,
+                  Math.cos(((element.angle + 90) * Math.PI) / 180) * element.radius,
+                  Math.cos(((element.angle + 180) * Math.PI) / 180) * element.radius,
+                  Math.cos(((element.angle + 270) * Math.PI) / 180) * element.radius,
+                  Math.cos((element.angle * Math.PI) / 180) * element.radius
+                ],
+                y: [
+                  Math.sin((element.angle * Math.PI) / 180) * element.radius,
+                  Math.sin(((element.angle + 90) * Math.PI) / 180) * element.radius,
+                  Math.sin(((element.angle + 180) * Math.PI) / 180) * element.radius,
+                  Math.sin(((element.angle + 270) * Math.PI) / 180) * element.radius,
+                  Math.sin((element.angle * Math.PI) / 180) * element.radius
+                ],
+                scale: [0.8, 1.2, 0.8],
+                opacity: [0.3, 0.6, 0.3]
               }}
               transition={{
-                duration: particle.duration,
-                repeat: prefersReducedMotion ? 0 : Infinity,
-                delay: particle.delay,
+                duration: element.duration,
+                repeat: Infinity,
+                delay: element.delay,
                 ease: "easeInOut"
               }}
             />
@@ -189,130 +403,212 @@ const AnimatedBackground = () => {
         </div>
       )}
 
-      {/* Grid pattern overlay with animation */}
-      <motion.div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(139, 92, 246, 0.4) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(139, 92, 246, 0.4) 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px'
-        }}
-        animate={{
-          backgroundPosition: ['0px 0px', '60px 60px']
-        }}
-        transition={{
-          duration: 30,
-          repeat: Infinity,
-          ease: "linear"
-        }}
-      />
+      {/* Floating geometric shapes for mid-ground */}
+      {floatingShapes.length > 0 && (
+        <div className="absolute inset-0" style={{ zIndex: 4 }}>
+          {floatingShapes.map((shape) => {
+            const ShapeComponent = ({ className, style }: { className: string; style: any }) => {
+              switch (shape.shape) {
+                case 'circle':
+                  return <div className={`${className} rounded-full`} style={style} />;
+                case 'square':
+                  return <div className={`${className} rounded-lg`} style={style} />;
+                case 'triangle':
+                  return (
+                    <div
+                      className={className}
+                      style={{
+                        ...style,
+                        clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'
+                      }}
+                    />
+                  );
+                case 'diamond':
+                  return (
+                    <div
+                      className={className}
+                      style={{
+                        ...style,
+                        clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
+                      }}
+                    />
+                  );
+                default:
+                  return <div className={`${className} rounded-full`} style={style} />;
+              }
+            };
 
-      {/* Central radial gradient with pulse */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] rounded-full"
-        style={{
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, rgba(6, 182, 212, 0.03) 50%, transparent 70%)'
-        }}
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.4, 0.7, 0.4],
-          rotate: [0, 360]
-        }}
-        transition={{
-          duration: 25,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
+            return (
+              <motion.div
+                key={shape.id}
+                className="absolute"
+                style={{
+                  left: `${shape.x}%`,
+                  top: `${shape.y}%`,
+                  width: `${shape.size}px`,
+                  height: `${shape.size}px`,
+                }}
+                animate={{
+                  x: [0, 30, -20, 0],
+                  y: [0, -40, 30, 0],
+                  rotate: [shape.rotation, shape.rotation + 180, shape.rotation + 360],
+                  scale: [0.8, 1.2, 0.8],
+                  opacity: [0.1, 0.3, 0.1]
+                }}
+                transition={{
+                  duration: shape.duration,
+                  repeat: Infinity,
+                  delay: shape.delay,
+                  ease: "easeInOut"
+                }}
+              >
+                <ShapeComponent
+                  className="w-full h-full border border-white/10"
+                  style={{
+                    background: `linear-gradient(135deg,
+                      rgba(139, 92, 246, 0.1),
+                      rgba(6, 182, 212, 0.05))`,
+                    backdropFilter: 'blur(1px)'
+                  }}
+                />
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
 
-      {/* Decorative lines with movement */}
-      <motion.div
-        className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-purple-500/15 to-transparent"
-        animate={{
-          opacity: [0.2, 0.6, 0.2],
-          scaleY: [1, 1.2, 1]
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
+      {/* Enhanced particle system (Foreground) */}
+      <div className="absolute inset-0" style={{ zIndex: 5 }}>
+        {particles.map((particle) => (
+          <motion.div
+            key={particle.id}
+            className="absolute rounded-full"
+            style={{
+              left: `${particle.x}%`,
+              top: `${particle.y}%`,
+              width: `${particle.size}px`,
+              height: `${particle.size}px`,
+              background: particleColors[particle.color as keyof typeof particleColors],
+              boxShadow: shouldEnableFullEffects
+                ? `0 0 ${particle.size * 3}px ${particleColors[particle.color as keyof typeof particleColors]}`
+                : 'none'
+            }}
+            animate={{
+              y: [0, -80 - particle.z * 0.3, particle.z * 0.2, 0],
+              x: [
+                0,
+                Math.sin((particle.id * Math.PI) / 8) * 20,
+                Math.cos((particle.id * Math.PI) / 6) * 15,
+                0
+              ],
+              opacity: [0, 0.8, 0.4, 0],
+              scale: [0, 1, 1.2, 0],
+              rotate: [0, 180 * particle.rotationSpeed, 360 * particle.rotationSpeed]
+            }}
+            transition={{
+              duration: particle.duration,
+              repeat: Infinity,
+              delay: particle.delay,
+              ease: shouldEnableFullEffects ? "easeOut" : "linear"
+            }}
+          />
+        ))}
+      </div>
 
-      <motion.div
-        className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-cyan-500/15 to-transparent"
-        animate={{
-          opacity: [0.2, 0.6, 0.2],
-          scaleY: [1, 1.3, 1]
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 3
-        }}
-      />
+      {/* Grid pattern overlay for depth */}
+      {shouldEnableFullEffects && (
+        <motion.div
+          className="absolute inset-0 opacity-20"
+          style={{
+            zIndex: 2,
+            backgroundImage: `
+              linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px'
+          }}
+          animate={{
+            opacity: [0.1, 0.2, 0.1],
+            backgroundPosition: ['0px 0px', '60px 60px', '0px 0px']
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+      )}
 
-      {/* Floating glass cards */}
-      <motion.div
-        className="absolute top-1/3 left-1/2 w-48 h-24 bg-gradient-to-r from-purple-500/10 to-transparent rounded-xl backdrop-blur-sm border border-purple-500/20"
-        animate={{
-          y: [0, -25, 0],
-          rotate: [0, 3, 0],
-          opacity: [0.3, 0.7, 0.3]
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
+      {/* Tablet version - simplified but elegant */}
+      {!shouldReduceEffects && !shouldEnableFullEffects && (
+        <>
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-cyan-500/5"
+            animate={{ opacity: [0.3, 0.5, 0.3] }}
+            transition={{ duration: 8, repeat: Infinity }}
+          />
 
-      <motion.div
-        className="absolute bottom-1/2 right-1/4 w-36 h-36 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-2xl backdrop-blur-sm border border-cyan-500/20"
-        animate={{
-          y: [0, 20, 0],
-          rotate: [0, -5, 0],
-          scale: [1, 1.05, 1],
-          opacity: [0.4, 0.8, 0.4]
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 2
-        }}
-      />
+          {/* Subtle moving gradient */}
+          <motion.div
+            className="absolute inset-0"
+            animate={{
+              background: [
+                "radial-gradient(ellipse at 30% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)",
+                "radial-gradient(ellipse at 70% 70%, rgba(6, 182, 212, 0.1) 0%, transparent 50%)",
+                "radial-gradient(ellipse at 30% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)"
+              ]
+            }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </>
+      )}
 
-      {/* Lens flare effect */}
-      <motion.div
-        className="absolute top-1/4 left-3/4 w-4 h-4 bg-white/20 rounded-full blur-sm"
-        animate={{
-          scale: [1, 2, 1],
-          opacity: [0.5, 1, 0.5],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
+      {/* Mobile version - minimal but present */}
+      {shouldReduceEffects && (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-500/8 to-cyan-500/8 opacity-60" />
 
-      <motion.div
-        className="absolute bottom-1/4 left-1/5 w-6 h-6 bg-purple-400/30 rounded-full blur-sm"
-        animate={{
-          scale: [1, 1.5, 1],
-          opacity: [0.3, 0.8, 0.3],
-        }}
-        transition={{
-          duration: 6,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1
-        }}
-      />
+          {/* Simple animated overlay */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"
+            animate={{ opacity: [0.5, 0.8, 0.5] }}
+            transition={{ duration: 6, repeat: Infinity }}
+          />
+        </>
+      )}
+
+      {/* Corner accent elements for desktop */}
+      {shouldEnableFullEffects && (
+        <>
+          {/* Top left accent */}
+          <motion.div
+            className="absolute top-0 left-0 w-96 h-96 opacity-20"
+            style={{
+              zIndex: 1,
+              background: `radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%)`
+            }}
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.2, 0.1]
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Bottom right accent */}
+          <motion.div
+            className="absolute bottom-0 right-0 w-96 h-96 opacity-20"
+            style={{
+              zIndex: 1,
+              background: `radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, transparent 70%)`
+            }}
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.2, 0.1]
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+          />
+        </>
+      )}
     </div>
   );
 };

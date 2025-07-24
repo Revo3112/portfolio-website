@@ -1,18 +1,18 @@
+// components/CursorBlob.tsx - FIXED VERSION
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
+import { useMobileOptimization } from '../hooks/useMobileOptimization';
 
 const CursorBlob = () => {
+  const { isDesktop } = useMobileOptimization();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Only show on desktop and if user prefers normal motion
-    const isMobile = window.innerWidth < 768;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (isMobile || prefersReducedMotion) return;
+    // Early return inside useEffect is fine
+    if (!isDesktop) return;
 
     let mouseX = 0;
     let mouseY = 0;
@@ -30,7 +30,6 @@ const CursorBlob = () => {
     };
 
     const animate = () => {
-      // Simple interpolation for smooth following
       currentX += (mouseX - currentX) * 0.1;
       currentY += (mouseY - currentY) * 0.1;
 
@@ -38,10 +37,9 @@ const CursorBlob = () => {
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    document.addEventListener('mousemove', handleMouseMove, { passive: true });
+    document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseleave', handleMouseLeave);
-
-    animate();
+    animationRef.current = requestAnimationFrame(animate);
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
@@ -50,26 +48,27 @@ const CursorBlob = () => {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, []);
+  }, [isDesktop]); // Add isDesktop as dependency
+
+  // Conditional rendering AFTER all hooks
+  if (!isDesktop) {
+    return null;
+  }
 
   return (
     <div
-      className={`fixed pointer-events-none z-50 transition-opacity duration-300 ${
-        isVisible ? 'opacity-60' : 'opacity-0'
+      className={`fixed top-0 left-0 w-8 h-8 pointer-events-none z-50 transition-opacity duration-300 ${
+        isVisible ? 'opacity-100' : 'opacity-0'
       }`}
       style={{
-        left: position.x - 15,
-        top: position.y - 15,
-        transform: 'translate(-50%, -50%)',
+        transform: `translate(${position.x - 16}px, ${position.y - 16}px)`,
+        background:
+          'radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(6, 182, 212, 0.2) 100%)',
+        borderRadius: '50%',
+        filter: 'blur(8px)',
+        mixBlendMode: 'screen',
       }}
-    >
-      <div
-        className="w-8 h-8 rounded-full bg-purple-500/20 blur-sm"
-        style={{
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%)',
-        }}
-      />
-    </div>
+    />
   );
 };
 

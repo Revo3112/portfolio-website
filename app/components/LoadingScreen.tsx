@@ -1,9 +1,10 @@
+// components/LoadingScreen.tsx - EPIC PROFESSIONAL VERSION
 'use client';
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useMobileOptimization } from '../hooks/useMobileOptimization';
 
-// Type definitions for particle systems
 interface Particle {
   id: number;
   x: number;
@@ -11,290 +12,512 @@ interface Particle {
   size: number;
   duration: number;
   delay: number;
+  color: string;
 }
 
-interface Orb {
+interface FloatingElement {
   id: number;
   size: number;
   x: number;
   y: number;
   duration: number;
   delay: number;
+  opacity: number;
 }
 
-const ProfessionalLoadingScreen = () => {
+const EpicLoadingScreen = () => {
+  const { shouldReduceEffects, isDesktop, isMobile, shouldEnableFullEffects } = useMobileOptimization();
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState('Initializing...');
   const [particles, setParticles] = useState<Particle[]>([]);
-  const [orbs, setOrbs] = useState<Orb[]>([]);
+  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>([]);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   const loadingSteps = [
-    'Initializing components...',
-    'Loading assets...',
-    'Connecting to server...',
-    'Processing data...',
-    'Finalizing setup...',
-    'Ready to launch!'
+    { text: 'Initializing quantum systems...', emoji: '⚡' },
+    { text: 'Loading neural networks...', emoji: '🧠' },
+    { text: 'Connecting to multiverse...', emoji: '🌌' },
+    { text: 'Calibrating algorithms...', emoji: '🔧' },
+    { text: 'Synchronizing data streams...', emoji: '📡' },
+    { text: 'Finalizing experience...', emoji: '✨' },
+    { text: 'Welcome to the future!', emoji: '🚀' }
   ];
 
   useEffect(() => {
-    // Initialize floating orbs
-    const orbData = Array.from({ length: 8 }, (_, i) => ({
-      id: i,
-      size: Math.random() * 60 + 20,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      duration: Math.random() * 8 + 6,
-      delay: Math.random() * 2,
-    }));
-    setOrbs(orbData);
+    // Generate particles and floating elements based on device capability
+    if (shouldEnableFullEffects) {
+      // Desktop - Full epic experience
+      const particleData = Array.from({ length: 50 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 3 + 1,
+        duration: Math.random() * 4 + 3,
+        delay: Math.random() * 2,
+        color: i % 3 === 0 ? 'purple' : i % 3 === 1 ? 'cyan' : 'pink'
+      }));
+      setParticles(particleData);
 
-    // Initialize particles
-    const particleData = Array.from({ length: 30 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 3 + 1,
-      duration: Math.random() * 4 + 3,
-      delay: Math.random() * 3,
-    }));
-    setParticles(particleData);
+      const floatingData = Array.from({ length: 15 }, (_, i) => ({
+        id: i,
+        size: Math.random() * 100 + 50,
+        x: Math.random() * 90 + 5,
+        y: Math.random() * 90 + 5,
+        duration: Math.random() * 10 + 8,
+        delay: Math.random() * 3,
+        opacity: Math.random() * 0.3 + 0.1
+      }));
+      setFloatingElements(floatingData);
+    } else if (!shouldReduceEffects && !isMobile) {
+      // Tablet - Moderate effects
+      const particleData = Array.from({ length: 25 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 2 + 1,
+        duration: Math.random() * 3 + 2,
+        delay: Math.random() * 1.5,
+        color: i % 2 === 0 ? 'purple' : 'cyan'
+      }));
+      setParticles(particleData);
 
-    // Simulate realistic loading progress
-    const interval = setInterval(() => {
+      const floatingData = Array.from({ length: 8 }, (_, i) => ({
+        id: i,
+        size: Math.random() * 80 + 40,
+        x: Math.random() * 85 + 7.5,
+        y: Math.random() * 85 + 7.5,
+        duration: Math.random() * 8 + 6,
+        delay: Math.random() * 2,
+        opacity: Math.random() * 0.2 + 0.05
+      }));
+      setFloatingElements(floatingData);
+    }
+
+    // Progress simulation with realistic timing
+    const progressInterval = setInterval(() => {
       setProgress(prev => {
-        const newProgress = Math.min(prev + Math.random() * 8 + 2, 100);
+        const increment = Math.random() * 12 + 3;
+        const newProgress = Math.min(prev + increment, 100);
 
-        // Update loading step based on progress
         const stepIndex = Math.floor((newProgress / 100) * loadingSteps.length);
-        setCurrentStep(loadingSteps[Math.min(stepIndex, loadingSteps.length - 1)]);
+        const currentStepData = loadingSteps[Math.min(stepIndex, loadingSteps.length - 1)];
+        setCurrentStep(currentStepData.text);
+
+        if (newProgress >= 95) {
+          setShowWelcome(true);
+        }
 
         if (newProgress >= 100) {
-          clearInterval(interval);
-          setTimeout(() => setLoading(false), 1000);
+          clearInterval(progressInterval);
+          setTimeout(() => setLoading(false), shouldReduceEffects ? 800 : 2000);
         }
 
         return newProgress;
       });
-    }, 120);
+    }, shouldReduceEffects ? 100 : 180);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearInterval(progressInterval);
+  }, [shouldEnableFullEffects, shouldReduceEffects, isMobile]);
 
+  // Mobile version - Clean and fast
+  if (shouldReduceEffects) {
+    return (
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-900 via-purple-900/20 to-black flex items-center justify-center"
+          >
+            <div className="text-center space-y-6">
+              {/* Simple logo */}
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="w-16 h-16 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6"
+              >
+                <span className="text-white font-bold text-2xl">R</span>
+              </motion.div>
+
+              {/* Minimal spinner */}
+              <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto" />
+
+              {/* Progress text */}
+              <motion.div
+                key={currentStep}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-white text-lg font-medium"
+              >
+                {currentStep}
+              </motion.div>
+
+              <div className="text-purple-400 text-sm font-mono">
+                {Math.round(progress)}%
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  }
+
+  // Desktop/Tablet - Epic experience
   return (
     <AnimatePresence>
       {loading && (
         <motion.div
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.1 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          exit={{
+            opacity: 0,
+            scale: 1.1,
+            rotateX: -15,
+            filter: "blur(20px)"
+          }}
+          transition={{ duration: 1.5, ease: [0.4, 0, 0.2, 1] }}
           className="fixed inset-0 z-[9999] overflow-hidden"
           style={{
             background: `
-              radial-gradient(ellipse at top left, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-              radial-gradient(ellipse at bottom right, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
-              radial-gradient(ellipse at center, rgba(26, 26, 46, 0.8) 0%, #0a0a0a 100%)
+              radial-gradient(ellipse at top left, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+              radial-gradient(ellipse at top right, rgba(236, 72, 153, 0.2) 0%, transparent 50%),
+              radial-gradient(ellipse at bottom left, rgba(6, 182, 212, 0.25) 0%, transparent 50%),
+              radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.2) 0%, transparent 50%),
+              radial-gradient(ellipse at center, rgba(15, 23, 42, 0.9) 0%, #000000 100%)
             `
           }}
         >
-          {/* Animated Background Orbs */}
+          {/* Animated mesh gradient background */}
+          <motion.div
+            className="absolute inset-0"
+            animate={{
+              background: [
+                "radial-gradient(600px circle at 20% 30%, rgba(139, 92, 246, 0.4), transparent 50%)",
+                "radial-gradient(600px circle at 80% 70%, rgba(6, 182, 212, 0.4), transparent 50%)",
+                "radial-gradient(600px circle at 40% 90%, rgba(236, 72, 153, 0.4), transparent 50%)",
+                "radial-gradient(600px circle at 20% 30%, rgba(139, 92, 246, 0.4), transparent 50%)"
+              ]
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Floating geometric elements */}
+          {shouldEnableFullEffects && (
+            <div className="absolute inset-0">
+              {floatingElements.map((element) => (
+                <motion.div
+                  key={element.id}
+                  className="absolute rounded-full border border-white/10"
+                  style={{
+                    width: element.size,
+                    height: element.size,
+                    left: `${element.x}%`,
+                    top: `${element.y}%`,
+                    background: `radial-gradient(circle, rgba(139, 92, 246, ${element.opacity}), rgba(6, 182, 212, ${element.opacity / 2}))`
+                  }}
+                  animate={{
+                    x: [0, 50, -30, 0],
+                    y: [0, -30, 40, 0],
+                    scale: [1, 1.2, 0.8, 1],
+                    rotate: [0, 180, 360],
+                    opacity: [element.opacity, element.opacity * 1.5, element.opacity * 0.5, element.opacity]
+                  }}
+                  transition={{
+                    duration: element.duration,
+                    repeat: Infinity,
+                    delay: element.delay,
+                    ease: "easeInOut"
+                  }}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Particle system */}
           <div className="absolute inset-0">
-            {orbs.map((orb) => (
-              <motion.div
-                key={orb.id}
-                className="absolute rounded-full opacity-10"
-                style={{
-                  width: orb.size,
-                  height: orb.size,
-                  left: `${orb.x}%`,
-                  top: `${orb.y}%`,
-                  background: `linear-gradient(135deg, rgba(139, 92, 246, 0.6), rgba(6, 182, 212, 0.6))`
-                }}
-                animate={{
-                  x: [0, 30, -20, 0],
-                  y: [0, -40, 20, 0],
-                  scale: [1, 1.2, 0.8, 1],
-                }}
-                transition={{
-                  duration: orb.duration,
-                  repeat: Infinity,
-                  delay: orb.delay,
-                  ease: "easeInOut"
-                }}
-              />
-            ))}
+            {particles.map((particle) => {
+              const colors = {
+                purple: "rgba(139, 92, 246, 0.8)",
+                cyan: "rgba(6, 182, 212, 0.8)",
+                pink: "rgba(236, 72, 153, 0.8)"
+              };
+
+              return (
+                <motion.div
+                  key={particle.id}
+                  className="absolute rounded-full"
+                  style={{
+                    width: particle.size,
+                    height: particle.size,
+                    left: `${particle.x}%`,
+                    top: `${particle.y}%`,
+                    background: colors[particle.color as keyof typeof colors] || colors.purple,
+                    boxShadow: `0 0 ${particle.size * 2}px ${colors[particle.color as keyof typeof colors] || colors.purple}`
+                  }}
+                  animate={{
+                    y: [-20, -100, -20],
+                    x: [0, Math.sin(particle.id) * 20, 0],
+                    opacity: [0, 1, 0],
+                    scale: [0, 1, 0]
+                  }}
+                  transition={{
+                    duration: particle.duration,
+                    repeat: Infinity,
+                    delay: particle.delay,
+                    ease: "easeOut"
+                  }}
+                />
+              );
+            })}
           </div>
 
-          {/* Floating Particles */}
-          <div className="absolute inset-0">
-            {particles.map((particle) => (
-              <motion.div
-                key={particle.id}
-                className="absolute rounded-full bg-white"
-                style={{
-                  width: particle.size,
-                  height: particle.size,
-                  left: `${particle.x}%`,
-                  top: `${particle.y}%`,
-                }}
-                animate={{
-                  y: [-20, -80, -20],
-                  x: [0, 10, -10, 0],
-                  opacity: [0, 0.6, 0],
-                }}
-                transition={{
-                  duration: particle.duration,
-                  repeat: Infinity,
-                  delay: particle.delay,
-                  ease: "easeOut"
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Main Content */}
+          {/* Main content */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center max-w-md mx-auto px-6">
+            <div className="text-center max-w-lg mx-auto px-6">
 
-              {/* Logo Container */}
+              {/* Epic logo with complex animation */}
               <motion.div
                 initial={{ scale: 0, rotate: -180, opacity: 0 }}
                 animate={{ scale: 1, rotate: 0, opacity: 1 }}
-                transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-                className="mb-8"
+                transition={{
+                  duration: 1.5,
+                  ease: [0.175, 0.885, 0.32, 1.275],
+                  delay: 0.3
+                }}
+                className="mb-12 relative"
               >
-                <div className="relative mx-auto w-24 h-24">
+                <div className="relative mx-auto w-32 h-32 group">
                   {/* Outer rotating ring */}
                   <motion.div
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                    className="absolute inset-0 rounded-full"
+                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0 rounded-full p-1"
                     style={{
-                      background: `conic-gradient(from 0deg, rgba(139, 92, 246, 0.8), rgba(6, 182, 212, 0.8), rgba(139, 92, 246, 0.8))`,
-                      padding: '3px'
+                      background: `conic-gradient(from 0deg,
+                        rgba(139, 92, 246, 1),
+                        rgba(236, 72, 153, 1),
+                        rgba(6, 182, 212, 1),
+                        rgba(168, 85, 247, 1),
+                        rgba(139, 92, 246, 1))`
                     }}
                   >
-                    <div className="w-full h-full rounded-full bg-[#0a0a0a]" />
+                    <div className="w-full h-full rounded-full bg-black" />
                   </motion.div>
 
-                  {/* Inner pulsing core */}
+                  {/* Middle ring */}
+                  <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-2 rounded-full border-2 border-cyan-400/50"
+                  />
+
+                  {/* Inner core */}
                   <motion.div
                     animate={{
                       scale: [1, 1.1, 1],
-                      opacity: [0.8, 1, 0.8]
+                      opacity: [0.8, 1, 0.8],
+                      boxShadow: [
+                        "0 0 30px rgba(139, 92, 246, 0.6)",
+                        "0 0 60px rgba(139, 92, 246, 0.8)",
+                        "0 0 30px rgba(139, 92, 246, 0.6)"
+                      ]
                     }}
                     transition={{
                       duration: 2,
                       repeat: Infinity,
                       ease: "easeInOut"
                     }}
-                    className="absolute inset-4 rounded-full flex items-center justify-center"
+                    className="absolute inset-6 rounded-full flex items-center justify-center"
                     style={{
-                      background: `linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(6, 182, 212, 0.9))`,
-                      boxShadow: `
-                        0 0 30px rgba(139, 92, 246, 0.6),
-                        inset 0 0 20px rgba(255, 255, 255, 0.2)
-                      `
+                      background: `linear-gradient(135deg,
+                        rgba(139, 92, 246, 0.9),
+                        rgba(6, 182, 212, 0.9))`
                     }}
                   >
-                    <span className="text-white font-bold text-xl">R</span>
+                    <motion.span
+                      animate={{
+                        textShadow: [
+                          "0 0 10px rgba(255, 255, 255, 0.8)",
+                          "0 0 20px rgba(255, 255, 255, 1)",
+                          "0 0 10px rgba(255, 255, 255, 0.8)"
+                        ]
+                      }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                      className="text-white font-bold text-3xl"
+                    >
+                      R
+                    </motion.span>
                   </motion.div>
+
+                  {/* Pulse rings */}
+                  {[...Array(3)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute inset-0 rounded-full border border-purple-400/30"
+                      animate={{
+                        scale: [1, 2, 1],
+                        opacity: [0.5, 0, 0.5]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: i * 1,
+                        ease: "easeOut"
+                      }}
+                    />
+                  ))}
                 </div>
               </motion.div>
 
-              {/* Brand Name */}
+              {/* Epic title */}
               <motion.div
-                initial={{ y: 30, opacity: 0 }}
+                initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                className="mb-2"
+                transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
+                className="mb-4"
               >
-                <h1
-                  className="text-5xl font-bold mb-2"
+                <motion.h1
+                  className="text-6xl md:text-7xl font-bold mb-4"
                   style={{
-                    background: `linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(6, 182, 212, 1))`,
+                    background: `linear-gradient(135deg,
+                      rgba(139, 92, 246, 1),
+                      rgba(236, 72, 153, 1),
+                      rgba(6, 182, 212, 1))`,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
+                    textShadow: '0 0 40px rgba(139, 92, 246, 0.5)'
                   }}
+                  animate={{
+                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                  }}
+                  transition={{ duration: 4, repeat: Infinity }}
                 >
                   Revo Rahmat
-                </h1>
+                </motion.h1>
 
                 <motion.p
-                  className="text-slate-400 text-lg font-medium"
-                  animate={{ opacity: [0.7, 1, 0.7] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-slate-300 text-xl md:text-2xl font-medium"
+                  animate={{
+                    opacity: [0.7, 1, 0.7],
+                    y: [0, -2, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
                 >
-                  Full-Stack Developer & BASIC Founder
+                  Full-Stack Developer & AI Engineer
                 </motion.p>
               </motion.div>
 
-              {/* Progress Section */}
+              {/* Enhanced progress section */}
               <motion.div
-                initial={{ y: 20, opacity: 0 }}
+                initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
-                className="mt-8 space-y-4"
+                transition={{ delay: 1, duration: 0.8 }}
+                className="mt-12 space-y-6"
               >
-                {/* Progress Bar Container */}
-                <div
-                  className="relative w-full h-2 rounded-full overflow-hidden"
-                  style={{
-                    background: `rgba(255, 255, 255, 0.05)`,
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
-                  }}
-                >
-                  {/* Progress Fill */}
-                  <motion.div
-                    className="h-full rounded-full relative"
+                {/* Progress bar with multiple layers */}
+                <div className="relative">
+                  <div
+                    className="relative w-full h-3 rounded-full overflow-hidden border border-white/20"
                     style={{
-                      width: `${progress}%`,
-                      background: `linear-gradient(90deg, rgba(139, 92, 246, 0.9), rgba(6, 182, 212, 0.9))`,
-                      boxShadow: `0 0 20px rgba(139, 92, 246, 0.6)`
+                      background: `rgba(0, 0, 0, 0.4)`,
+                      backdropFilter: 'blur(10px)',
                     }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
                   >
-                    {/* Shimmer effect */}
+                    {/* Progress fill */}
                     <motion.div
-                      className="absolute inset-0 rounded-full"
+                      className="h-full rounded-full relative"
                       style={{
-                        background: `linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)`,
-                        backgroundSize: '100px 100%'
+                        width: `${progress}%`,
+                        background: `linear-gradient(90deg,
+                          rgba(139, 92, 246, 0.9),
+                          rgba(236, 72, 153, 0.9),
+                          rgba(6, 182, 212, 0.9))`,
+                        boxShadow: `0 0 20px rgba(139, 92, 246, 0.6)`
                       }}
-                      animate={{ x: [-100, 300] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                  </motion.div>
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    >
+                      {/* Animated shine effect */}
+                      <motion.div
+                        className="absolute inset-0 rounded-full"
+                        style={{
+                          background: `linear-gradient(90deg,
+                            transparent,
+                            rgba(255, 255, 255, 0.6),
+                            transparent)`,
+                          backgroundSize: '100px 100%'
+                        }}
+                        animate={{ x: [-100, 400] }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          repeatDelay: 1
+                        }}
+                      />
+                    </motion.div>
+                  </div>
+
+                  {/* Progress glow */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: `linear-gradient(90deg,
+                        rgba(139, 92, 246, 0.3),
+                        rgba(6, 182, 212, 0.3))`,
+                      filter: 'blur(10px)',
+                      width: `${progress}%`
+                    }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
                 </div>
 
-                {/* Progress Info */}
-                <div className="flex justify-between items-center text-sm">
-                  <motion.span
-                    className="text-slate-300"
+                {/* Status text */}
+                <div className="flex justify-between items-center">
+                  <motion.div
                     key={currentStep}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="flex items-center gap-3"
                   >
-                    {currentStep}
-                  </motion.span>
-                  <span className="text-slate-400 font-mono">
-                    {Math.round(progress)}%
-                  </span>
+                    <motion.span
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="text-2xl"
+                    >
+                      {loadingSteps[Math.floor((progress / 100) * loadingSteps.length)]?.emoji || '⚡'}
+                    </motion.span>
+                    <span className="text-slate-200 text-lg font-medium">
+                      {currentStep}
+                    </span>
+                  </motion.div>
+
+                  <motion.div
+                    className="text-right"
+                    animate={{ scale: [1, 1.05, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  >
+                    <div className="text-2xl font-bold text-purple-400 font-mono">
+                      {Math.round(progress)}%
+                    </div>
+                    <div className="text-xs text-slate-400">
+                      Loading
+                    </div>
+                  </motion.div>
                 </div>
               </motion.div>
 
-              {/* Loading Dots */}
+              {/* Pulsing dots */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1, duration: 0.5 }}
-                className="flex justify-center space-x-2 mt-6"
+                transition={{ delay: 1.2 }}
+                className="flex justify-center space-x-3 mt-8"
               >
-                {[0, 1, 2].map((i) => (
+                {[0, 1, 2, 3, 4].map((i) => (
                   <motion.div
                     key={i}
                     className="w-2 h-2 rounded-full"
@@ -306,7 +529,7 @@ const ProfessionalLoadingScreen = () => {
                       opacity: [0.5, 1, 0.5],
                     }}
                     transition={{
-                      duration: 1,
+                      duration: 1.5,
                       repeat: Infinity,
                       delay: i * 0.2,
                       ease: "easeInOut"
@@ -314,37 +537,52 @@ const ProfessionalLoadingScreen = () => {
                   />
                 ))}
               </motion.div>
+
+              {/* Welcome message */}
+              <AnimatePresence>
+                {showWelcome && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    className="mt-8 text-center"
+                  >
+                    <motion.div
+                      className="text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 font-semibold"
+                      animate={{
+                        backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                      }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    >
+                      🚀 Launching incredible experience...
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
-          {/* Decorative Elements */}
-          <motion.div
-            className="absolute top-10 left-10"
-            animate={{ rotate: 360, scale: [1, 1.1, 1] }}
-            transition={{ duration: 8, repeat: Infinity }}
-          >
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{
-                background: `rgba(139, 92, 246, 0.6)`,
-                boxShadow: `0 0 20px rgba(139, 92, 246, 0.4)`
-              }}
-            />
-          </motion.div>
+          {/* Corner decorations */}
+          {shouldEnableFullEffects && (
+            <>
+              {/* Top left */}
+              <motion.div
+                className="absolute top-8 left-8 w-16 h-16 border-l-2 border-t-2 border-purple-400/30"
+                animate={{
+                  borderColor: ['rgba(139, 92, 246, 0.3)', 'rgba(6, 182, 212, 0.5)', 'rgba(139, 92, 246, 0.3)']
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+              />
 
-          <motion.div
-            className="absolute bottom-10 right-10"
-            animate={{ rotate: -360, scale: [1, 0.9, 1] }}
-            transition={{ duration: 6, repeat: Infinity }}
-          >
-            <div
-              className="w-6 h-6 rounded-full"
-              style={{
-                background: `rgba(6, 182, 212, 0.6)`,
-                boxShadow: `0 0 20px rgba(6, 182, 212, 0.4)`
-              }}
-            />
-          </motion.div>
+              {/* Bottom right */}
+              <motion.div
+                className="absolute bottom-8 right-8 w-16 h-16 border-r-2 border-b-2 border-cyan-400/30"
+                animate={{
+                  borderColor: ['rgba(6, 182, 212, 0.3)', 'rgba(236, 72, 153, 0.5)', 'rgba(6, 182, 212, 0.3)']
+                }}
+                transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+              />
+            </>
+          )}
 
         </motion.div>
       )}
@@ -352,4 +590,4 @@ const ProfessionalLoadingScreen = () => {
   );
 };
 
-export default ProfessionalLoadingScreen;
+export default EpicLoadingScreen;
