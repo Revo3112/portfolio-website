@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Revo Rahmat - Full Stack Developer & AI/ML Engineer | Web3 Blockchain Expert",
   description: "Experienced Full Stack Developer & AI/ML Engineer specializing in Web3, Blockchain, and modern web technologies. Winner of PKM-KC funding, published IEEE researcher, founder of BASIC blockchain community. Expert in React, Laravel, Python, JavaScript with proven track record of improving database performance by 25% and AI accuracy by 90%. Teaching Assistant at Universitas Pembangunan Jaya with 40+ students mentored.",
   keywords: "Revo Rahmat, Full Stack Developer, AI Machine Learning Engineer, Web3 Developer, Blockchain Expert, React Developer, Laravel Expert, Python Developer, JavaScript, SQL Database Expert, IEEE Published Researcher, PKM-KC Winner, BASIC Founder, Universitas Pembangunan Jaya, Teaching Assistant, Maxy Academy, Computer Vision, VISTA Project, Cybersecurity Expert, IoT Developer, Arduino Raspberry Pi, Embedded Systems, Database Optimization, API Integration, Agile Scrum, Git Version Control, WordPress Developer, Figma UI UX, Object Oriented Programming, Smart Contracts, Cryptocurrency, DeFi, NFT, Blockchain Hackathon, Manta Partner, Xellar Partner, Jakarta Indonesia Developer, Indonesian Tech Talent, PAUD Khairani Developer, Google Classroom Training, Interactive Learning Materials, WhatsApp API Integration, Academic Research Publications, Computer Science Student, Technology Innovation, Open Source Contributor",
-  authors: [{ name: "Revo Rahmat", url: "https://revo3112.vercel.app" }],
+  authors: [{ name: "Revo Rahmat", url: "https://RevoRahmat.vercel.app" }],
   creator: "Revo Rahmat",
   publisher: "Revo Rahmat",
   category: "Technology",
@@ -29,21 +29,21 @@ export const metadata: Metadata = {
     },
   },
   referrer: "origin-when-cross-origin",
-  metadataBase: new URL("https://revo3112.vercel.app"),
+  metadataBase: new URL("https://RevoRahmat.vercel.app"),
   alternates: {
-    canonical: "https://revo3112.vercel.app",
+    canonical: "https://RevoRahmat.vercel.app",
     languages: {
-      "en-US": "https://revo3112.vercel.app",
-      "id-ID": "https://revo3112.vercel.app/id",
+      "en-US": "https://RevoRahmat.vercel.app",
+      "id-ID": "https://RevoRahmat.vercel.app/id",
     },
     types: {
-      "application/rss+xml": "https://revo3112.vercel.app/rss.xml",
+      "application/rss+xml": "https://RevoRahmat.vercel.app/rss.xml",
     },
   },
   openGraph: {
     title: "Revo Rahmat - Full Stack Developer & AI/ML Engineer | Web3 Blockchain Expert",
     description: "🚀 Experienced Full Stack Developer & AI/ML Engineer from Jakarta, Indonesia. PKM-KC Winner 🏆 | IEEE Published Researcher 📝 | BASIC Blockchain Community Founder 🔗 | Teaching Assistant at Universitas Pembangunan Jaya 🎓 | Expert in React, Laravel, Python, Web3, Computer Vision, IoT & Database Optimization. Proven track record: 25% database performance improvement, 90% AI accuracy enhancement, 40+ students mentored with 80% securing tech roles.",
-    url: "https://revo3112.vercel.app",
+    url: "https://RevoRahmat.vercel.app",
     siteName: "Revo Rahmat - Full Stack Developer Portfolio",
     images: [
       {
@@ -162,9 +162,9 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//linkedin.com" />
 
         {/* Canonical and Alternate Links */}
-        <link rel="canonical" href="https://revo3112.vercel.app" />
-        <link rel="alternate" href="https://revo3112.vercel.app" hrefLang="en" />
-        <link rel="alternate" href="https://revo3112.vercel.app/id" hrefLang="id" />
+        <link rel="canonical" href="https://RevoRahmat.vercel.app" />
+        <link rel="alternate" href="https://RevoRahmat.vercel.app" hrefLang="en" />
+        <link rel="alternate" href="https://RevoRahmat.vercel.app/id" hrefLang="id" />
 
         {/* Feed Links */}
         <link rel="alternate" type="application/rss+xml" title="Revo Rahmat Portfolio RSS" href="/rss.xml" />
