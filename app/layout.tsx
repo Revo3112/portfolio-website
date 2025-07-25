@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     title: "Revo Rahmat - Full Stack Developer & AI/ML Engineer | Web3 Expert",
     description: "🚀 PKM-KC Winner | IEEE Researcher | BASIC Founder | Teaching Assistant UPJ | Expert in React, Laravel, Python, Web3, AI/ML, Computer Vision | 25% DB Performance ⬆️ | 90% AI Accuracy ⬆️ | Jakarta, Indonesia 🇮🇩",
     images: {
-      url: "/og-image.png",
+      url: "/images/Profile.png",
       alt: "Revo Rahmat - Full Stack Developer Portfolio",
     },
   },
@@ -154,7 +154,7 @@ export default function RootLayout({
 
         {/* Preload Critical Resources */}
         <link rel="preload" href="/images/profile.jpg" as="image" type="image/jpeg" />
-        <link rel="preload" href="/og-image.png" as="image" type="image/png" />
+        <link rel="preload" href="/images/Profile.png" as="image" type="image/png" />
 
         {/* DNS Prefetch for External Resources */}
         <link rel="dns-prefetch" href="//vercel.com" />

@@ -13,7 +13,7 @@ export default function StructuredData() {
     "url": "https://revo3112.vercel.app",
     "image": [
       "https://revo3112.vercel.app/images/profile.jpg",
-      "https://revo3112.vercel.app/og-image.png"
+      "https://revo3112.vercel.app/images/Profile.png"
     ],
     "sameAs": [
       "https://github.com/Revo3112",
@@ -206,7 +206,7 @@ export default function StructuredData() {
     "dateCreated": "2024-01-01",
     "dateModified": "2025-01-23",
     "url": "https://revo3112.vercel.app",
-    "image": "https://revo3112.vercel.app/og-image.png",
+    "image": "https://revo3112.vercel.app/images/Profile.png",
     "keywords": [
       "Full Stack Developer Portfolio",
       "AI ML Engineer",
