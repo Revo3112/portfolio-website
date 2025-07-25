@@ -1,11 +1,14 @@
-// hooks/useMobileOptimization.ts - SIMPLIFIED VERSION
+// hooks/useMobileOptimization.ts - SIMPLIFIED SCREEN-SIZE ONLY DETECTION
+"use client";
+
 import { useState, useEffect } from 'react';
 
 export const useMobileOptimization = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(false);
   const [isReducedMotion, setIsReducedMotion] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(0);
 
   useEffect(() => {
     setHasMounted(true);
@@ -14,37 +17,71 @@ export const useMobileOptimization = () => {
       if (typeof window === 'undefined') return;
 
       const width = window.innerWidth;
-      const userAgent = navigator.userAgent.toLowerCase();
+      setScreenWidth(width);
 
-      // Simplified detection: Mobile vs Desktop ONLY
-      const isMobileDevice = width < 768 ||
-        /android|webos|iphone|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+      // SIMPLE BREAKPOINT-BASED DETECTION
+      // Mobile: < 768px
+      // Desktop: >= 768px
+      const isMobileDevice = width < 768;
+      const isDesktopDevice = width >= 768;
 
       setIsMobile(isMobileDevice);
-      setIsDesktop(!isMobileDevice);
+      setIsDesktop(isDesktopDevice);
 
-      // Motion preference check
-      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-      setIsReducedMotion(mediaQuery.matches);
+      // Motion preference detection
+      let motionReduced = false;
+      try {
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        motionReduced = mediaQuery.matches;
+
+        const handleMotionChange = (e: MediaQueryListEvent) => {
+          setIsReducedMotion(e.matches);
+        };
+
+        mediaQuery.addEventListener('change', handleMotionChange);
+        return () => mediaQuery.removeEventListener('change', handleMotionChange);
+      } catch (error) {
+        console.warn('Media query for reduced motion failed:', error);
+        motionReduced = false;
+      }
+
+      setIsReducedMotion(motionReduced);
     };
 
-    detectDevice();
+    const cleanup = detectDevice();
 
-    // Handle resize
+    // Debounced resize handler
+    let resizeTimeout: NodeJS.Timeout;
     const handleResize = () => {
-      detectDevice();
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(detectDevice, 150);
     };
 
     window.addEventListener('resize', handleResize, { passive: true });
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+      if (cleanup) cleanup();
     };
   }, []);
 
-  // Simplified effects logic
-  const shouldReduceEffects = false; // Force disable
-  const shouldEnableFullEffects = true; // Force enable
+  // CLEAR LOGIC: Only based on screen size
+  const shouldReduceEffects = isMobile; // Reduce effects for mobile (< 768px)
+  const shouldEnableFullEffects = isDesktop && !isReducedMotion; // Full effects for desktop (>= 768px) unless user prefers reduced motion
+
+  // Debug logging
+  if (process.env.NODE_ENV === 'development' && hasMounted) {
+    console.log('Mobile Optimization Debug:', {
+      screenWidth,
+      isMobile: `${isMobile} (< 768px)`,
+      isDesktop: `${isDesktop} (>= 768px)`,
+      isReducedMotion,
+      shouldReduceEffects,
+      shouldEnableFullEffects,
+      deviceType: isMobile ? 'mobile' : 'desktop'
+    });
+  }
 
   return {
     isMobile,
@@ -53,6 +90,7 @@ export const useMobileOptimization = () => {
     shouldReduceEffects,
     shouldEnableFullEffects,
     hasMounted,
-    deviceType: isMobile ? 'mobile' : 'desktop'
+    deviceType: isMobile ? 'mobile' : 'desktop',
+    screenWidth, // Added for debugging
   };
 };
