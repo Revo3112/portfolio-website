@@ -112,10 +112,26 @@ export const metadata: Metadata = {
     nositelinkssearchbox: false,
     notranslate: false,
   },
+  // Gunakan data URL untuk icon sederhana atau hapus jika tidak ada
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: [
+      {
+        url: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💻</text></svg>",
+        type: "image/svg+xml",
+      },
+      {
+        url: "/favicon.ico",
+        sizes: "any",
+      }
+    ],
+    shortcut: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💻</text></svg>",
+    apple: [
+      {
+        url: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%238b5cf6'/><text x='90' y='120' font-family='Arial' font-size='100' text-anchor='middle' fill='white'>R</text></svg>",
+        sizes: "180x180",
+        type: "image/svg+xml",
+      }
+    ],
   },
 };
 
@@ -148,7 +164,6 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="application-name" content="Revo Rahmat Portfolio" />
         <meta name="msapplication-TileColor" content="#8b5cf6" />
-        <meta name="msapplication-config" content="/browserconfig.xml" />
         <meta name="theme-color" content="#8b5cf6" />
         <meta name="color-scheme" content="dark light" />
 
@@ -169,6 +184,10 @@ export default function RootLayout({
         {/* Feed Links */}
         <link rel="alternate" type="application/rss+xml" title="Revo Rahmat Portfolio RSS" href="/rss.xml" />
         <link rel="alternate" type="application/atom+xml" title="Revo Rahmat Portfolio Atom" href="/atom.xml" />
+
+        {/* Inline SVG Icons as Data URLs (No 404 errors) */}
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💻</text></svg>" />
+        <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%238b5cf6'/><text x='90' y='120' font-family='Arial' font-size='100' text-anchor='middle' fill='white'>R</text></svg>" />
 
         {/* Security Headers */}
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />

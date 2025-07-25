@@ -65,10 +65,7 @@ const Hero = () => {
             className="text-gray-400 mb-8 max-w-2xl md:max-w-3xl mx-auto md:mx-0 text-lg md:text-xl leading-relaxed"
             style={{ wordBreak: "break-word" }}
           >
-            Full-Stack Developer skilled in React, Next.js, AI/ML, Blockchain, and Database Optimization.<br />
-            Improved database performance by 25% and impact analysis accuracy by 90% using LLMs.<br />
-            Mentored 40+ students, with 80% securing tech roles. Founded BASIC, organizing blockchain hackathons.<br />
-            Secured PKM-KC funding for VISTA, an AI-driven object-tracking system with 95% precision.
+            Passionate Full-Stack Developer with expertise spanning AI/ML, Blockchain, and Database Optimization. I've successfully enhanced database performance by 25% and improved impact analysis accuracy by 90% using Large Language Models. As a dedicated mentor, I've guided 40+ students with an impressive 80% success rate in securing tech roles. Currently pursuing Computer Science at Universitas Pembangunan Jaya while actively contributing to the tech ecosystem as Founder of BASIC - a thriving blockchain community that has forged partnerships with industry leaders like Manta, Xellar, Lisk, Educhain, and Mancer.
           </motion.p>
 
           <motion.div
@@ -145,38 +142,122 @@ const Hero = () => {
               />
             </div>
 
-            {/* Tech Stack Icons (AI, Next.js, Blockchain, Database, etc) */}
+            {/* Tech Stack Icons - Sesuai dengan expertise Revo */}
+
+            {/* React/JavaScript - Frontend Development */}
             <motion.div
-              animate={{ y: [0, -8, 0] }}
+              animate={{ y: [0, -8, 0], rotate: [0, 10, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30"
+              className="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center shadow-xl border border-blue-400/40"
             >
-              {/* Next.js Icon */}
-              <svg className="w-5 h-5 text-white" viewBox="0 0 32 32" fill="none"><path d="M16 0C7.163 0 0 7.163 0 16c0 8.837 7.163 16 16 16s16-7.163 16-16c0-8.837-7.163-16-16-16zm0 29.333C8.636 29.333 2.667 23.364 2.667 16S8.636 2.667 16 2.667 29.333 8.636 29.333 16 23.364 29.333 16 29.333z" fill="currentColor"/><path d="M21.333 10.667l-7.333 10.666h2.667l7.333-10.666h-2.667z" fill="currentColor"/></svg>
+              {/* React Icon */}
+              <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="2"/>
+                <path d="M12 1a11 11 0 0 1 0 22 11 11 0 0 1 0-22zm0 2a9 9 0 0 0 0 18 9 9 0 0 0 0-18z"/>
+                <path d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+                <path d="M12 1C7.5 1 4 4.5 4 9s8 4 8 4 8-.5 8-4-4.5-8-8-8z" opacity="0.3"/>
+              </svg>
             </motion.div>
+
+            {/* Database/SQL - Database Optimization Expert */}
             <motion.div
-              animate={{ y: [0, 8, 0] }}
+              animate={{ y: [0, 8, 0], x: [0, -4, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-3 -left-3 w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg border border-green-400/30"
-            >
-              {/* AI Icon */}
-              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M8 12h8M12 8v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-            </motion.div>
-            <motion.div
-              animate={{ x: [-4, 4, -4] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-1/2 -left-4 w-9 h-9 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center shadow-lg border border-yellow-400/30"
-            >
-              {/* Blockchain Icon */}
-              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2"/><rect x="14" y="3" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2"/><rect x="14" y="14" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2"/><rect x="3" y="14" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2"/><path d="M7 7l10 10M17 7L7 17" stroke="currentColor" strokeWidth="2"/></svg>
-            </motion.div>
-            <motion.div
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-8 -right-8 w-8 h-8 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg border border-purple-400/30"
+              className="absolute -bottom-3 -left-3 w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-xl border border-green-400/40"
             >
               {/* Database Icon */}
-              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="5" rx="9" ry="3" stroke="currentColor" strokeWidth="2"/><path d="M3 5v14c0 1.657 4.03 3 9 3s9-1.343 9-3V5" stroke="currentColor" strokeWidth="2"/><path d="M3 12c0 1.657 4.03 3 9 3s9-1.343 9-3" stroke="currentColor" strokeWidth="2"/></svg>
+              <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                <path d="M3 5v14c0 1.657 4.03 3 9 3s9-1.343 9-3V5"/>
+                <path d="M3 12c0 1.657 4.03 3 9 3s9-1.343 9-3"/>
+              </svg>
+            </motion.div>
+
+            {/* AI/ML - Machine Learning & VISTA Project */}
+            <motion.div
+              animate={{ x: [-4, 4, -4], rotate: [0, -10, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-1/2 -left-4 w-11 h-11 bg-gradient-to-r from-purple-500 to-violet-600 rounded-xl flex items-center justify-center shadow-xl border border-purple-400/40"
+            >
+              {/* AI/Brain Icon */}
+              <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.07 2.07 0 0 1-2.44-2.44 2.07 2.07 0 0 1-2.44-2.44 2.07 2.07 0 0 1-2.44-2.44A2.5 2.5 0 0 1 2.5 9.5z"/>
+                <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.07 2.07 0 0 0 2.44-2.44 2.07 2.07 0 0 0 2.44-2.44 2.07 2.07 0 0 0 2.44-2.44A2.5 2.5 0 0 0 21.5 9.5z"/>
+                <circle cx="12" cy="12" r="1"/>
+                <path d="M8 12h8"/>
+                <path d="M12 8v8"/>
+              </svg>
+            </motion.div>
+
+            {/* Blockchain - BASIC Community Founder */}
+            <motion.div
+              animate={{ scale: [1, 1.15, 1], rotate: [0, 15, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-8 -right-8 w-10 h-10 bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl flex items-center justify-center shadow-xl border border-orange-400/40"
+            >
+              {/* Blockchain/Link Icon */}
+              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <rect x="3" y="3" width="6" height="6" rx="1"/>
+                <rect x="15" y="3" width="6" height="6" rx="1"/>
+                <rect x="3" y="15" width="6" height="6" rx="1"/>
+                <rect x="15" y="15" width="6" height="6" rx="1"/>
+                <path d="M9 6h6"/>
+                <path d="M9 18h6"/>
+                <path d="M6 9v6"/>
+                <path d="M18 9v6"/>
+              </svg>
+            </motion.div>
+
+            {/* Laravel/PHP - Backend Development */}
+            <motion.div
+              animate={{ y: [0, -6, 0], x: [0, 3, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute bottom-12 -right-6 w-10 h-10 bg-gradient-to-r from-red-500 to-rose-600 rounded-xl flex items-center justify-center shadow-xl border border-red-400/40"
+            >
+              {/* Laravel/Code Icon */}
+              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+                <line x1="12" y1="2" x2="12" y2="22"/>
+              </svg>
+            </motion.div>
+
+            {/* Embedded Systems/IoT - Arduino & Hardware */}
+            <motion.div
+              animate={{ rotate: [0, 20, 0], scale: [1, 1.1, 1] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-16 -left-6 w-9 h-9 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-lg flex items-center justify-center shadow-xl border border-teal-400/40"
+            >
+              {/* Chip/Microcontroller Icon */}
+              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="4" y="4" width="16" height="16" rx="2"/>
+                <rect x="8" y="8" width="8" height="8" rx="1"/>
+                <path d="M2 8h2"/>
+                <path d="M2 12h2"/>
+                <path d="M2 16h2"/>
+                <path d="M20 8h2"/>
+                <path d="M20 12h2"/>
+                <path d="M20 16h2"/>
+                <path d="M8 2v2"/>
+                <path d="M12 2v2"/>
+                <path d="M16 2v2"/>
+                <path d="M8 20v2"/>
+                <path d="M12 20v2"/>
+                <path d="M16 20v2"/>
+              </svg>
+            </motion.div>
+
+            {/* Teaching/Mentoring - Academic Achievement */}
+            <motion.div
+              animate={{ y: [0, 5, 0], rotate: [0, -8, 0] }}
+              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute bottom-8 left-8 w-9 h-9 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-lg flex items-center justify-center shadow-xl border border-indigo-400/40"
+            >
+              {/* Graduation/Academic Icon */}
+              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+              </svg>
             </motion.div>
           </div>
         </motion.div>
