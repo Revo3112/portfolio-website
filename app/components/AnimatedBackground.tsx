@@ -1,4 +1,4 @@
-// components/AnimatedBackground.tsx - ENHANCED WITH PSEUDO-3D OBJECTS
+// components/AnimatedBackground.tsx - MOBILE PERFORMANCE OPTIMIZED
 "use client";
 
 import { motion } from "framer-motion";
@@ -32,7 +32,7 @@ interface PseudoObject {
   id: number;
   x: number;
   y: number;
-  z: number; // Depth layer
+  z: number;
   width: number;
   height: number;
   rotation: number;
@@ -55,7 +55,6 @@ interface OrbitingElement {
 }
 
 const AnimatedBackground = () => {
-
   const { shouldReduceEffects, isDesktop, isMobile, shouldEnableFullEffects, hasMounted } = useMobileOptimization();
   const [isClient, setIsClient] = useState(false);
 
@@ -66,21 +65,22 @@ const AnimatedBackground = () => {
   // SSR-safe: Only render full effects after both mount and client
   const readyToRender = hasMounted && isClient;
 
-  // Enhanced particle system with 3D-like movement - SSR SAFE
+  // MOBILE ULTRA-OPTIMIZED: Minimal particles with simpler animations
   const particles = useMemo(() => {
     if (!readyToRender) return [];
 
     if (shouldReduceEffects) {
-      return [...Array(5)].map((_, i) => ({
+      // MOBILE: Only 3 particles with simple movement
+      return [...Array(3)].map((_, i) => ({
         id: i,
-        x: (i * 25) % 100,
-        y: (i * 30) % 100,
-        z: i * 10,
-        size: 2,
-        duration: 4 + (i % 2),
-        delay: i * 0.5,
+        x: 20 + (i * 30),
+        y: 20 + (i * 25),
+        z: 0, // No Z-axis for mobile
+        size: 3,
+        duration: 8, // Longer, slower animations
+        delay: i * 2,
         color: i % 2 === 0 ? 'purple' : 'cyan',
-        rotationSpeed: 0.5
+        rotationSpeed: 0 // No rotation for mobile
       }));
     }
 
@@ -111,7 +111,7 @@ const AnimatedBackground = () => {
     }));
   }, [readyToRender, shouldReduceEffects, shouldEnableFullEffects]);
 
-  // NEW: Pseudo-3D Objects for depth illusion - SSR SAFE
+  // MOBILE: Disable pseudo objects completely
   const pseudoObjects = useMemo(() => {
     if (!readyToRender || shouldReduceEffects) return [];
 
@@ -135,7 +135,7 @@ const AnimatedBackground = () => {
     }));
   }, [readyToRender, shouldReduceEffects, shouldEnableFullEffects]);
 
-  // NEW: Orbiting elements for dynamic movement
+  // MOBILE: Disable orbiting elements completely
   const orbitingElements = useMemo(() => {
     if (!readyToRender || shouldReduceEffects) return [];
 
@@ -153,7 +153,7 @@ const AnimatedBackground = () => {
     }));
   }, [readyToRender, shouldReduceEffects, shouldEnableFullEffects]);
 
-  // Floating geometric shapes for mid-ground
+  // MOBILE: Disable floating shapes completely
   const floatingShapes = useMemo(() => {
     if (!readyToRender || shouldReduceEffects) return [];
 
@@ -189,10 +189,10 @@ const AnimatedBackground = () => {
     emerald: 'rgba(16, 185, 129, 0.6)'
   };
 
-  // Pseudo-3D Object Component
+  // Pseudo-3D Object Component (Desktop only)
   const PseudoObjectComponent = ({ obj }: { obj: PseudoObject }) => {
-    const scale = 1 - (obj.z / 500); // Objects farther away are smaller
-    const blur = obj.z / 100; // Objects farther away are blurred
+    const scale = 1 - (obj.z / 500);
+    const blur = obj.z / 100;
     const baseColor = particleColors[obj.color as keyof typeof particleColors];
 
     const renderShape = () => {
@@ -281,7 +281,7 @@ const AnimatedBackground = () => {
           top: `${obj.y}%`,
           width: `${obj.width * scale}px`,
           height: `${obj.height * scale}px`,
-          zIndex: Math.floor(10 - obj.z / 35) // Farther objects behind closer ones
+          zIndex: Math.floor(10 - obj.z / 35)
         }}
         animate={{
           x: [0, Math.sin(obj.id * 0.7) * 80, Math.cos(obj.id * 0.5) * 60, 0],
@@ -306,10 +306,111 @@ const AnimatedBackground = () => {
       {/* Base gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background-secondary/30 to-background-tertiary/20" />
 
-      {/* Enhanced gradient animations for desktop */}
+      {/* MOBILE VERSION - ULTRA LIGHTWEIGHT */}
+      {shouldReduceEffects && (
+        <>
+          {/* Static gradient - no animation to save performance */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/8 via-transparent to-cyan-500/8" />
+
+          {/* Single subtle animated layer - very slow to save battery */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 to-transparent"
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            transition={{
+              duration: 12, // Very slow animation
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+
+          {/* Minimal particles - only 3 simple dots */}
+          <div className="absolute inset-0" style={{ zIndex: 2 }}>
+            {particles.map((particle) => (
+              <motion.div
+                key={particle.id}
+                className="absolute rounded-full"
+                style={{
+                  left: `${particle.x}%`,
+                  top: `${particle.y}%`,
+                  width: `${particle.size}px`,
+                  height: `${particle.size}px`,
+                  background: particleColors[particle.color as keyof typeof particleColors],
+                  // No box-shadow for mobile to save performance
+                }}
+                animate={{
+                  // Simple up-down movement only
+                  y: [0, -30, 0],
+                  opacity: [0.3, 0.7, 0.3],
+                  // No rotation, no complex movement
+                }}
+                transition={{
+                  duration: particle.duration,
+                  repeat: Infinity,
+                  delay: particle.delay,
+                  ease: "easeInOut" // Simple easing
+                }}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* TABLET VERSION - MODERATE EFFECTS */}
+      {!shouldReduceEffects && !shouldEnableFullEffects && (
+        <>
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-cyan-500/5"
+            animate={{ opacity: [0.3, 0.5, 0.3] }}
+            transition={{ duration: 8, repeat: Infinity }}
+          />
+
+          <motion.div
+            className="absolute inset-0"
+            animate={{
+              background: [
+                "radial-gradient(ellipse at 30% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)",
+                "radial-gradient(ellipse at 70% 70%, rgba(6, 182, 212, 0.1) 0%, transparent 50%)",
+                "radial-gradient(ellipse at 30% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)"
+              ]
+            }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Tablet particles */}
+          <div className="absolute inset-0" style={{ zIndex: 4 }}>
+            {particles.map((particle) => (
+              <motion.div
+                key={particle.id}
+                className="absolute rounded-full"
+                style={{
+                  left: `${particle.x}%`,
+                  top: `${particle.y}%`,
+                  width: `${particle.size}px`,
+                  height: `${particle.size}px`,
+                  background: particleColors[particle.color as keyof typeof particleColors],
+                }}
+                animate={{
+                  y: [0, -50, 0],
+                  x: [0, Math.sin((particle.id * Math.PI) / 8) * 15, 0],
+                  opacity: [0, 0.6, 0],
+                  scale: [0, 1, 0],
+                }}
+                transition={{
+                  duration: particle.duration,
+                  repeat: Infinity,
+                  delay: particle.delay,
+                  ease: "easeOut"
+                }}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* DESKTOP VERSION - FULL EFFECTS */}
       {shouldEnableFullEffects && (
         <>
-          {/* Primary animated gradient */}
+          {/* Enhanced gradient animations for desktop */}
           <motion.div
             className="absolute inset-0"
             animate={{
@@ -323,7 +424,6 @@ const AnimatedBackground = () => {
             transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
           />
 
-          {/* Secondary gradient layer */}
           <motion.div
             className="absolute inset-0"
             animate={{
@@ -337,7 +437,6 @@ const AnimatedBackground = () => {
             transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
           />
 
-          {/* Mesh gradient overlay */}
           <motion.div
             className="absolute inset-0 opacity-40"
             style={{
@@ -354,241 +453,194 @@ const AnimatedBackground = () => {
             }}
             transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
           />
-        </>
-      )}
 
-      {/* NEW: Background Pseudo-3D Objects Layer (Furthest) */}
-      {pseudoObjects.length > 0 && (
-        <div className="absolute inset-0" style={{ zIndex: 1 }}>
-          {pseudoObjects.map((obj) => (
-            <PseudoObjectComponent key={obj.id} obj={obj} />
-          ))}
-        </div>
-      )}
+          {/* Background Pseudo-3D Objects Layer */}
+          {pseudoObjects.length > 0 && (
+            <div className="absolute inset-0" style={{ zIndex: 1 }}>
+              {pseudoObjects.map((obj) => (
+                <PseudoObjectComponent key={obj.id} obj={obj} />
+              ))}
+            </div>
+          )}
 
-      {/* NEW: Orbiting Elements Layer */}
-      {orbitingElements.length > 0 && (
-        <div className="absolute inset-0" style={{ zIndex: 3 }}>
-          {orbitingElements.map((element) => (
-            <motion.div
-              key={element.id}
-              className="absolute rounded-full"
-              style={{
-                width: `${element.size}px`,
-                height: `${element.size}px`,
-                background: `radial-gradient(circle, rgba(139, 92, 246, 0.4), rgba(6, 182, 212, 0.2))`,
-                border: '1px solid rgba(139, 92, 246, 0.3)',
-                left: `${element.centerX}%`,
-                top: `${element.centerY}%`,
-                transformOrigin: 'center center'
-              }}
-              animate={{
-                x: [
-                  Math.cos((element.angle * Math.PI) / 180) * element.radius,
-                  Math.cos(((element.angle + 90) * Math.PI) / 180) * element.radius,
-                  Math.cos(((element.angle + 180) * Math.PI) / 180) * element.radius,
-                  Math.cos(((element.angle + 270) * Math.PI) / 180) * element.radius,
-                  Math.cos((element.angle * Math.PI) / 180) * element.radius
-                ],
-                y: [
-                  Math.sin((element.angle * Math.PI) / 180) * element.radius,
-                  Math.sin(((element.angle + 90) * Math.PI) / 180) * element.radius,
-                  Math.sin(((element.angle + 180) * Math.PI) / 180) * element.radius,
-                  Math.sin(((element.angle + 270) * Math.PI) / 180) * element.radius,
-                  Math.sin((element.angle * Math.PI) / 180) * element.radius
-                ],
-                scale: [0.8, 1.2, 0.8],
-                opacity: [0.3, 0.6, 0.3]
-              }}
-              transition={{
-                duration: element.duration,
-                repeat: Infinity,
-                delay: element.delay,
-                ease: "easeInOut"
-              }}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Floating geometric shapes for mid-ground */}
-      {floatingShapes.length > 0 && (
-        <div className="absolute inset-0" style={{ zIndex: 4 }}>
-          {floatingShapes.map((shape) => {
-            const ShapeComponent = ({ className, style }: { className: string; style: any }) => {
-              switch (shape.shape) {
-                case 'circle':
-                  return <div className={`${className} rounded-full`} style={style} />;
-                case 'square':
-                  return <div className={`${className} rounded-lg`} style={style} />;
-                case 'triangle':
-                  return (
-                    <div
-                      className={className}
-                      style={{
-                        ...style,
-                        clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'
-                      }}
-                    />
-                  );
-                case 'diamond':
-                  return (
-                    <div
-                      className={className}
-                      style={{
-                        ...style,
-                        clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
-                      }}
-                    />
-                  );
-                default:
-                  return <div className={`${className} rounded-full`} style={style} />;
-              }
-            };
-
-            return (
-              <motion.div
-                key={shape.id}
-                className="absolute"
-                style={{
-                  left: `${shape.x}%`,
-                  top: `${shape.y}%`,
-                  width: `${shape.size}px`,
-                  height: `${shape.size}px`,
-                }}
-                animate={{
-                  x: [0, 30, -20, 0],
-                  y: [0, -40, 30, 0],
-                  rotate: [shape.rotation, shape.rotation + 180, shape.rotation + 360],
-                  scale: [0.8, 1.2, 0.8],
-                  opacity: [0.1, 0.3, 0.1]
-                }}
-                transition={{
-                  duration: shape.duration,
-                  repeat: Infinity,
-                  delay: shape.delay,
-                  ease: "easeInOut"
-                }}
-              >
-                <ShapeComponent
-                  className="w-full h-full border border-white/10"
+          {/* Orbiting Elements Layer */}
+          {orbitingElements.length > 0 && (
+            <div className="absolute inset-0" style={{ zIndex: 3 }}>
+              {orbitingElements.map((element) => (
+                <motion.div
+                  key={element.id}
+                  className="absolute rounded-full"
                   style={{
-                    background: `linear-gradient(135deg,
-                      rgba(139, 92, 246, 0.1),
-                      rgba(6, 182, 212, 0.05))`,
-                    backdropFilter: 'blur(1px)'
+                    width: `${element.size}px`,
+                    height: `${element.size}px`,
+                    background: `radial-gradient(circle, rgba(139, 92, 246, 0.4), rgba(6, 182, 212, 0.2))`,
+                    border: '1px solid rgba(139, 92, 246, 0.3)',
+                    left: `${element.centerX}%`,
+                    top: `${element.centerY}%`,
+                    transformOrigin: 'center center'
+                  }}
+                  animate={{
+                    x: [
+                      Math.cos((element.angle * Math.PI) / 180) * element.radius,
+                      Math.cos(((element.angle + 90) * Math.PI) / 180) * element.radius,
+                      Math.cos(((element.angle + 180) * Math.PI) / 180) * element.radius,
+                      Math.cos(((element.angle + 270) * Math.PI) / 180) * element.radius,
+                      Math.cos((element.angle * Math.PI) / 180) * element.radius
+                    ],
+                    y: [
+                      Math.sin((element.angle * Math.PI) / 180) * element.radius,
+                      Math.sin(((element.angle + 90) * Math.PI) / 180) * element.radius,
+                      Math.sin(((element.angle + 180) * Math.PI) / 180) * element.radius,
+                      Math.sin(((element.angle + 270) * Math.PI) / 180) * element.radius,
+                      Math.sin((element.angle * Math.PI) / 180) * element.radius
+                    ],
+                    scale: [0.8, 1.2, 0.8],
+                    opacity: [0.3, 0.6, 0.3]
+                  }}
+                  transition={{
+                    duration: element.duration,
+                    repeat: Infinity,
+                    delay: element.delay,
+                    ease: "easeInOut"
                   }}
                 />
-              </motion.div>
-            );
-          })}
-        </div>
-      )}
+              ))}
+            </div>
+          )}
 
-      {/* Enhanced particle system (Foreground) */}
-      <div className="absolute inset-0" style={{ zIndex: 5 }}>
-        {particles.map((particle) => (
+          {/* Floating geometric shapes */}
+          {floatingShapes.length > 0 && (
+            <div className="absolute inset-0" style={{ zIndex: 4 }}>
+              {floatingShapes.map((shape) => {
+                const ShapeComponent = ({ className, style }: { className: string; style: any }) => {
+                  switch (shape.shape) {
+                    case 'circle':
+                      return <div className={`${className} rounded-full`} style={style} />;
+                    case 'square':
+                      return <div className={`${className} rounded-lg`} style={style} />;
+                    case 'triangle':
+                      return (
+                        <div
+                          className={className}
+                          style={{
+                            ...style,
+                            clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'
+                          }}
+                        />
+                      );
+                    case 'diamond':
+                      return (
+                        <div
+                          className={className}
+                          style={{
+                            ...style,
+                            clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
+                          }}
+                        />
+                      );
+                    default:
+                      return <div className={`${className} rounded-full`} style={style} />;
+                  }
+                };
+
+                return (
+                  <motion.div
+                    key={shape.id}
+                    className="absolute"
+                    style={{
+                      left: `${shape.x}%`,
+                      top: `${shape.y}%`,
+                      width: `${shape.size}px`,
+                      height: `${shape.size}px`,
+                    }}
+                    animate={{
+                      x: [0, 30, -20, 0],
+                      y: [0, -40, 30, 0],
+                      rotate: [shape.rotation, shape.rotation + 180, shape.rotation + 360],
+                      scale: [0.8, 1.2, 0.8],
+                      opacity: [0.1, 0.3, 0.1]
+                    }}
+                    transition={{
+                      duration: shape.duration,
+                      repeat: Infinity,
+                      delay: shape.delay,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <ShapeComponent
+                      className="w-full h-full border border-white/10"
+                      style={{
+                        background: `linear-gradient(135deg,
+                          rgba(139, 92, 246, 0.1),
+                          rgba(6, 182, 212, 0.05))`,
+                        backdropFilter: 'blur(1px)'
+                      }}
+                    />
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Enhanced particle system */}
+          <div className="absolute inset-0" style={{ zIndex: 5 }}>
+            {particles.map((particle) => (
+              <motion.div
+                key={particle.id}
+                className="absolute rounded-full"
+                style={{
+                  left: `${particle.x}%`,
+                  top: `${particle.y}%`,
+                  width: `${particle.size}px`,
+                  height: `${particle.size}px`,
+                  background: particleColors[particle.color as keyof typeof particleColors],
+                  boxShadow: `0 0 ${particle.size * 3}px ${particleColors[particle.color as keyof typeof particleColors]}`
+                }}
+                animate={{
+                  y: [0, -80 - particle.z * 0.3, particle.z * 0.2, 0],
+                  x: [
+                    0,
+                    Math.sin((particle.id * Math.PI) / 8) * 20,
+                    Math.cos((particle.id * Math.PI) / 6) * 15,
+                    0
+                  ],
+                  opacity: [0, 0.8, 0.4, 0],
+                  scale: [0, 1, 1.2, 0],
+                  rotate: [0, 180 * particle.rotationSpeed, 360 * particle.rotationSpeed]
+                }}
+                transition={{
+                  duration: particle.duration,
+                  repeat: Infinity,
+                  delay: particle.delay,
+                  ease: "easeOut"
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Grid pattern overlay */}
           <motion.div
-            key={particle.id}
-            className="absolute rounded-full"
+            className="absolute inset-0 opacity-20"
             style={{
-              left: `${particle.x}%`,
-              top: `${particle.y}%`,
-              width: `${particle.size}px`,
-              height: `${particle.size}px`,
-              background: particleColors[particle.color as keyof typeof particleColors],
-              boxShadow: shouldEnableFullEffects
-                ? `0 0 ${particle.size * 3}px ${particleColors[particle.color as keyof typeof particleColors]}`
-                : 'none'
+              zIndex: 2,
+              backgroundImage: `
+                linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px)
+              `,
+              backgroundSize: '60px 60px'
             }}
             animate={{
-              y: [0, -80 - particle.z * 0.3, particle.z * 0.2, 0],
-              x: [
-                0,
-                Math.sin((particle.id * Math.PI) / 8) * 20,
-                Math.cos((particle.id * Math.PI) / 6) * 15,
-                0
-              ],
-              opacity: [0, 0.8, 0.4, 0],
-              scale: [0, 1, 1.2, 0],
-              rotate: [0, 180 * particle.rotationSpeed, 360 * particle.rotationSpeed]
+              opacity: [0.1, 0.2, 0.1],
+              backgroundPosition: ['0px 0px', '60px 60px', '0px 0px']
             }}
             transition={{
-              duration: particle.duration,
+              duration: 30,
               repeat: Infinity,
-              delay: particle.delay,
-              ease: shouldEnableFullEffects ? "easeOut" : "linear"
+              ease: "linear"
             }}
           />
-        ))}
-      </div>
 
-      {/* Grid pattern overlay for depth */}
-      {shouldEnableFullEffects && (
-        <motion.div
-          className="absolute inset-0 opacity-20"
-          style={{
-            zIndex: 2,
-            backgroundImage: `
-              linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: '60px 60px'
-          }}
-          animate={{
-            opacity: [0.1, 0.2, 0.1],
-            backgroundPosition: ['0px 0px', '60px 60px', '0px 0px']
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-      )}
-
-      {/* Tablet version - simplified but elegant */}
-      {!shouldReduceEffects && !shouldEnableFullEffects && (
-        <>
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-cyan-500/5"
-            animate={{ opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 8, repeat: Infinity }}
-          />
-
-          {/* Subtle moving gradient */}
-          <motion.div
-            className="absolute inset-0"
-            animate={{
-              background: [
-                "radial-gradient(ellipse at 30% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)",
-                "radial-gradient(ellipse at 70% 70%, rgba(6, 182, 212, 0.1) 0%, transparent 50%)",
-                "radial-gradient(ellipse at 30% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)"
-              ]
-            }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </>
-      )}
-
-      {/* Mobile version - minimal but present */}
-      {shouldReduceEffects && (
-        <>
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-500/8 to-cyan-500/8 opacity-60" />
-
-          {/* Simple animated overlay */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"
-            animate={{ opacity: [0.5, 0.8, 0.5] }}
-            transition={{ duration: 6, repeat: Infinity }}
-          />
-        </>
-      )}
-
-      {/* Corner accent elements for desktop */}
-      {shouldEnableFullEffects && (
-        <>
-          {/* Top left accent */}
+          {/* Corner accent elements */}
           <motion.div
             className="absolute top-0 left-0 w-96 h-96 opacity-20"
             style={{
@@ -602,7 +654,6 @@ const AnimatedBackground = () => {
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           />
 
-          {/* Bottom right accent */}
           <motion.div
             className="absolute bottom-0 right-0 w-96 h-96 opacity-20"
             style={{
