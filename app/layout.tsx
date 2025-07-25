@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     siteName: "Revo Rahmat - Full Stack Developer Portfolio",
     images: [
       {
-        url: "/og-image.png",
+        url: "/images/profile.jpg",
         width: 1200,
         height: 630,
         alt: "Revo Rahmat - Full Stack Developer & AI/ML Engineer Portfolio Preview",
