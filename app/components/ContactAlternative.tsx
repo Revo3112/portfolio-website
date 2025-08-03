@@ -3,10 +3,12 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { Send, Mail, Phone, MapPin, Loader2 } from "lucide-react";
+import { Send, Mail, Phone, MapPin, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
   const ref = useRef(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const isInView = useInView(ref, { once: true });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -16,13 +18,31 @@ const Contact = () => {
     message: "",
   });
 
+  // EmailJS Configuration (you'll need to setup EmailJS account)
+  const EMAILJS_SERVICE_ID = 'your_service_id';
+  const EMAILJS_TEMPLATE_ID = 'your_template_id';
+  const EMAILJS_PUBLIC_KEY = 'your_public_key';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
     try {
-      // Try API endpoint first
+      // Method 1: Try EmailJS first (if configured)
+      if (EMAILJS_SERVICE_ID !== 'your_service_id') {
+        await emailjs.sendForm(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          formRef.current!,
+          EMAILJS_PUBLIC_KEY
+        );
+        setSubmitStatus('success');
+        setFormData({ name: "", email: "", message: "" });
+        return;
+      }
+
+      // Method 2: Fallback to our API endpoint
       const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: {
@@ -36,28 +56,13 @@ const Contact = () => {
       if (response.ok) {
         setSubmitStatus('success');
         setFormData({ name: "", email: "", message: "" });
-        alert("✅ Thank you for your message! I'll get back to you soon. Check your email for confirmation.");
       } else {
-        // Fallback to mailto if API fails
         setSubmitStatus('error');
-        const subject = encodeURIComponent(`Message from ${formData.name}`);
-        const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
-        const mailtoLink = `mailto:revorahmat@gmail.com?subject=${subject}&body=${body}`;
-
-        window.open(mailtoLink, '_blank');
-        alert("⚠️ Server email temporarily unavailable. Opening your email client instead. Please send the message from there.");
+        console.error('API Error:', data.error);
       }
     } catch (error) {
       setSubmitStatus('error');
       console.error('Error sending email:', error);
-
-      // Fallback to mailto
-      const subject = encodeURIComponent(`Message from ${formData.name}`);
-      const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
-      const mailtoLink = `mailto:revorahmat@gmail.com?subject=${subject}&body=${body}`;
-
-      window.open(mailtoLink, '_blank');
-      alert("⚠️ Network error. Opening your email client as backup. Please send the message from there.");
     } finally {
       setIsSubmitting(false);
     }
@@ -90,6 +95,43 @@ const Contact = () => {
     },
   ];
 
+  // Status Messages Component
+  const StatusMessage = () => {
+    if (submitStatus === 'success') {
+      return (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-4 p-4 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center gap-3"
+        >
+          <CheckCircle className="w-5 h-5 text-green-400" />
+          <div>
+            <p className="text-green-400 font-medium">Message sent successfully! ✨</p>
+            <p className="text-green-300 text-sm">I'll get back to you within 24-48 hours.</p>
+          </div>
+        </motion.div>
+      );
+    }
+
+    if (submitStatus === 'error') {
+      return (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3"
+        >
+          <AlertCircle className="w-5 h-5 text-red-400" />
+          <div>
+            <p className="text-red-400 font-medium">Failed to send message</p>
+            <p className="text-red-300 text-sm">Please try again or email me directly at revorahmat@gmail.com</p>
+          </div>
+        </motion.div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <section id="contact" className="py-20 relative">
       <div className="container mx-auto px-6">
@@ -117,7 +159,9 @@ const Contact = () => {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <StatusMessage />
+
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium mb-2">
                   Your Name
@@ -169,14 +213,21 @@ const Contact = () => {
               <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-full px-8 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-purple-500/25 transition-shadow duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-interactive"
+                whileHover={!isSubmitting ? { scale: 1.05 } : {}}
+                whileTap={!isSubmitting ? { scale: 0.95 } : {}}
+                className={`w-full px-8 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-interactive ${
+                  submitStatus === 'success' ? 'bg-green-500' : ''
+                }`}
               >
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
                     Sending...
+                  </>
+                ) : submitStatus === 'success' ? (
+                  <>
+                    <CheckCircle className="w-5 h-5" />
+                    Message Sent!
                   </>
                 ) : (
                   <>
@@ -186,23 +237,15 @@ const Contact = () => {
                 )}
               </motion.button>
 
-              {/* Backup Email Button */}
-              <div className="text-center text-sm text-gray-400 mt-4">
-                <p>Having trouble?
-                  <motion.button
-                    type="button"
-                    onClick={() => {
-                      const subject = encodeURIComponent(`Message from ${formData.name || 'Website Visitor'}`);
-                      const body = encodeURIComponent(`Name: ${formData.name || '[Please fill your name]'}\nEmail: ${formData.email || '[Please fill your email]'}\n\nMessage:\n${formData.message || '[Please write your message here]'}`);
-                      const mailtoLink = `mailto:revorahmat@gmail.com?subject=${subject}&body=${body}`;
-                      window.open(mailtoLink, '_blank');
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="text-purple-400 hover:text-purple-300 ml-2 transition-colors underline cursor-pointer"
+              {/* Fallback contact info */}
+              <div className="text-center text-sm text-gray-400">
+                <p>Or email me directly at:
+                  <a
+                    href="mailto:revorahmat@gmail.com"
+                    className="text-purple-400 hover:text-purple-300 ml-2 transition-colors"
                   >
-                    Send via Email Client
-                  </motion.button>
+                    revorahmat@gmail.com
+                  </a>
                 </p>
               </div>
             </form>
