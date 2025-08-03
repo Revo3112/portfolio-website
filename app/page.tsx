@@ -10,7 +10,6 @@ import Projects from "./components/Projects";
 import Contact from "./components/Contact";
 import CursorBlob from "./components/CursorBlob";
 import ScrollProgress from "./components/ScrollProgress";
-import EpicLoadingScreen from "./components/LoadingScreen";
 import PerformanceOptimizer from "./components/PerformanceOptimizer";
 import SmoothScroll from "./components/SmoothScroll";
 import AnimatedBackground from "./components/AnimatedBackground";
@@ -29,9 +28,6 @@ export default function Home() {
   return (
     <SmoothScroll>
       <div className="relative min-h-screen overflow-x-hidden">
-        {/* Epic Loading Screen - Hydration safe */}
-        <EpicLoadingScreen />
-
         <PerformanceOptimizer>
           {/* Enhanced Animated Background - Only render when ready */}
           {hasMounted && <AnimatedBackground />}
