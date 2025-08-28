@@ -10,8 +10,8 @@ interface UseScrollRevealOptions {
 
 export const useScrollReveal = (options: UseScrollRevealOptions = {}) => {
   const {
-    threshold = 0.1,
-    rootMargin = '0px 0px -50px 0px',
+    threshold = 0.2, // Increased threshold for better Lenis compatibility
+    rootMargin = '0px 0px -20px 0px', // Reduced negative margin for responsive detection
     triggerOnce = true,
     delay = 0
   } = options;
@@ -35,6 +35,7 @@ export const useScrollReveal = (options: UseScrollRevealOptions = {}) => {
               }
             }, delay);
           } else {
+            // Immediate trigger untuk better sync dengan Lenis
             setIsVisible(true);
             if (triggerOnce) {
               setHasAnimated(true);

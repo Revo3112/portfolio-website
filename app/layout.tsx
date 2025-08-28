@@ -4,7 +4,12 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import StructuredData from "./components/StructuredData";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap", // Optimasi font loading untuk LCP
+  preload: true,
+  variable: "--font-inter" // CSS variable untuk better caching
+});
 
 export const metadata: Metadata = {
   title: "Revo Rahmat - Full Stack Developer & AI/ML Engineer | Web3 Blockchain Expert",

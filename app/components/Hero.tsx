@@ -13,13 +13,13 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }} // Kurangi dari 0.8 ke 0.6
           className="flex-1 text-center md:text-left"
         >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.1 }} // Kurangi dari 0.2 ke 0.1
             className="mb-6"
           >
             <h1 className="text-5xl md:text-7xl font-bold mb-4 text-shadow">
@@ -31,7 +31,7 @@ const Hero = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.2 }} // Kurangi dari 0.4 ke 0.2
             className="mb-8"
           >
             <TypeAnimation
@@ -61,7 +61,7 @@ const Hero = () => {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.3 }} // Kurangi dari 0.6 ke 0.3
             className="text-gray-400 mb-8 max-w-2xl md:max-w-3xl mx-auto md:mx-0 text-lg md:text-xl leading-relaxed"
             style={{ wordBreak: "break-word" }}
           >
@@ -71,7 +71,7 @@ const Hero = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
+            transition={{ delay: 0.4 }} // Kurangi dari 0.8 ke 0.4
             className="flex flex-wrap gap-4 justify-center md:justify-start"
           >
             <motion.a
@@ -97,7 +97,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }} // Kurangi dari 0.8 ke 0.6
           className="flex-1 flex items-center justify-center relative"
         >
           <div className="relative w-72 h-72 md:w-80 md:h-80 mx-auto">

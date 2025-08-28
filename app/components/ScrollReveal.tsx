@@ -43,8 +43,8 @@ const ScrollReveal = ({
         visible: {
           opacity: 1,
           transition: {
-            staggerChildren: 0.15,
-            delayChildren: 0.2,
+            staggerChildren: 0.08, // Reduced stagger untuk faster reveals
+            delayChildren: 0.1, // Reduced delay
           },
         },
       };
@@ -53,42 +53,45 @@ const ScrollReveal = ({
     switch (direction) {
       case 'left':
         return {
-          hidden: { opacity: 0, x: -100, scale: 0.95 },
+          hidden: { opacity: 0, x: -100, scale: 0.98 },
           visible: {
             opacity: 1,
             x: 0,
             scale: 1,
-            transition: { duration: 0.8, ease: [0.25, 0.25, 0, 1] },
+            transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
           },
         };
       case 'right':
         return {
-          hidden: { opacity: 0, x: 100, scale: 0.95 },
+          hidden: { opacity: 0, x: 100, scale: 0.98 },
           visible: {
             opacity: 1,
             x: 0,
             scale: 1,
-            transition: { duration: 0.8, ease: [0.25, 0.25, 0, 1] },
+            transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
           },
         };
       case 'scale':
         return {
-          hidden: { opacity: 0, scale: 0.8, rotateY: 15 },
+          hidden: { opacity: 0, scale: 0.85, rotateY: 10 }, // Lighter rotation
           visible: {
             opacity: 1,
             scale: 1,
             rotateY: 0,
-            transition: { duration: 0.8, ease: [0.25, 0.25, 0, 1] },
+            transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
           },
         };
       default:
         return {
-          hidden: { opacity: 0, y: 50, scale: 0.95 },
+          hidden: { opacity: 0, y: 50, scale: 0.98 }, // Lighter scale for smoother reveals
           visible: {
             opacity: 1,
             y: 0,
             scale: 1,
-            transition: { duration: 0.6, ease: [0.25, 0.25, 0, 1] },
+            transition: {
+              duration: 0.4, // Reduced duration for responsive reveals
+              ease: [0.25, 0.1, 0.25, 1] // Lighter easing curve
+            },
           },
         };
     }

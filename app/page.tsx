@@ -1,6 +1,7 @@
-// page.tsx - COMPLETE HYDRATION-SAFE VERSION
+// page.tsx - LCP OPTIMIZED VERSION
 "use client";
 
+import { Suspense, lazy } from "react";
 import Navigation from "./components/Navigation";
 import Hero from "./components/Hero";
 import Overview from "./components/Overview";
@@ -8,12 +9,14 @@ import WorkExperience from "./components/WorkExperience";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
-import CursorBlob from "./components/CursorBlob";
-import ScrollProgress from "./components/ScrollProgress";
 import PerformanceOptimizer from "./components/PerformanceOptimizer";
 import SmoothScroll from "./components/SmoothScroll";
-import AnimatedBackground from "./components/AnimatedBackground";
 import { useMobileOptimization } from "./hooks/useMobileOptimization";
+
+// Lazy load non-critical components untuk better LCP
+const CursorBlob = lazy(() => import("./components/CursorBlob"));
+const ScrollProgress = lazy(() => import("./components/ScrollProgress"));
+const AnimatedBackground = lazy(() => import("./components/AnimatedBackground"));
 
 export default function Home() {
   const {
@@ -28,20 +31,11 @@ export default function Home() {
   return (
     <SmoothScroll>
       <div className="relative min-h-screen overflow-x-hidden">
+        {/* Critical above-the-fold content - Render immediately */}
+        {hasMounted && <Navigation />}
+
         <PerformanceOptimizer>
-          {/* Enhanced Animated Background - Only render when ready */}
-          {hasMounted && <AnimatedBackground />}
-
-          {/* Scroll Progress Bar */}
-          {hasMounted && <ScrollProgress />}
-
-          {/* Cursor Blob - Desktop only */}
-          {hasMounted && isDesktop && <CursorBlob />}
-
-          {/* Navigation */}
-          {hasMounted && <Navigation />}
-
-          {/* Main Content */}
+          {/* Hero section - Priority untuk LCP */}
           {hasMounted && (
             <main
               className={`relative z-10 ${
@@ -59,13 +53,13 @@ export default function Home() {
             </main>
           )}
 
-          {/* Debug indicator - only in development */}
-          {process.env.NODE_ENV === 'development' && hasMounted && (
-            <div className="fixed bottom-4 left-4 z-50 p-2 bg-black/80 text-white text-xs rounded font-mono">
-              <div>Device: {deviceType}</div>
-              <div>Screen: {window.innerWidth}px</div>
-              <div>Effects: {shouldEnableFullEffects ? 'Full' : shouldReduceEffects ? 'Reduced' : 'Standard'}</div>
-            </div>
+          {/* Non-critical background components - Lazy loaded */}
+          {hasMounted && (
+            <Suspense fallback={null}>
+              <AnimatedBackground />
+              <ScrollProgress />
+              {isDesktop && <CursorBlob />}
+            </Suspense>
           )}
         </PerformanceOptimizer>
       </div>

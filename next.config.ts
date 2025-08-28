@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Performance optimizations untuk LCP
+  experimental: {
+    optimizePackageImports: ['framer-motion', 'lucide-react', '@react-three/fiber'],
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  // Enable gzip compression
+  compress: true,
+  // swcMinify removed - sudah default di Next.js 15
 };
 
 export default nextConfig;
