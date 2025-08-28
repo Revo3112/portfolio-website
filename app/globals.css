@@ -34,6 +34,14 @@
   html {
     scroll-behavior: auto; /* Let Lenis handle smooth scrolling */
     overflow-x: hidden;
+    /* Ensure smooth touch scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y; /* Allow vertical pan only */
+  }
+
+  body {
+    /* Optimize touch scrolling */
+    touch-action: pan-y;
   }
 
   /* CSS Variables - Enhanced and Optimized */

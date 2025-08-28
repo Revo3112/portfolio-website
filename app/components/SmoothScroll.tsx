@@ -23,19 +23,19 @@ const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
       return; // Skip smooth scrolling if user prefers reduced motion
     }
 
-    // Intersection Observer compatible Lenis configuration
+    // Mobile-optimized Lenis configuration
     const lenis = new Lenis({
-      duration: isMobile ? 0.6 : 0.7, // Faster for better IntersectionObserver sync
+      duration: isMobile ? 0.8 : 0.7, // Slower duration for mobile = more noticeable smooth effect
       easing: (t) => 1 - Math.pow(1 - t, 2), // Lighter easing for smoother reveals
       orientation: "vertical",
       gestureOrientation: "vertical",
-      smoothWheel: true,
-      wheelMultiplier: isMobile ? 0.8 : 1, // Lighter on mobile for touch compatibility
-      touchMultiplier: isMobile ? 1.0 : 1.2, // Reduced multipliers for smoother detection
+      smoothWheel: !isMobile, // Disable smooth wheel on mobile (touch devices)
+      wheelMultiplier: 1, // Standard multiplier
+      touchMultiplier: isMobile ? 1.5 : 1.2, // Higher multiplier for mobile for more responsive touch
       infinite: false,
       autoResize: true,
-      syncTouch: true,
-      lerp: isMobile ? 0.08 : 0.06, // Much lighter lerp for responsive scroll detection
+      syncTouch: false, // CRITICAL: Disable syncTouch to prevent conflicts with native touch scrolling
+      lerp: isMobile ? 0.15 : 0.06, // Higher lerp for mobile = more responsive and visible smooth effect
     });
 
     lenisRef.current = lenis;
