@@ -8,12 +8,10 @@ import Overview from "./components/Overview";
 import WorkExperience from "./components/WorkExperience";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
-import Contact from "./components/Contact";
+import ContactModern from "./components/ContactModern"; // Updated to modern contact
 import PerformanceOptimizer from "./components/PerformanceOptimizer";
 import SmoothScroll from "./components/SmoothScroll";
-import { useMobileOptimization } from "./hooks/useMobileOptimization";
-
-// Lazy load non-critical components untuk better LCP
+import { useMobileOptimization } from "./hooks/useMobileOptimization";// Lazy load non-critical components untuk better LCP
 const CursorBlob = lazy(() => import("./components/CursorBlob"));
 const ScrollProgress = lazy(() => import("./components/ScrollProgress"));
 const AnimatedBackground = lazy(() => import("./components/AnimatedBackground"));
@@ -49,7 +47,7 @@ export default function Home() {
               <WorkExperience />
               <Skills />
               <Projects />
-              <Contact />
+              <ContactModern />
             </main>
           )}
 

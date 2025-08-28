@@ -1,27 +1,29 @@
-// components/CursorBlob.tsx - COMPLETE HYDRATION-SAFE VERSION
+// components/CursorBlob.tsx - OPTIMIZED WITHOUT CUSTOM RAF
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useMobileOptimization } from '../hooks/useMobileOptimization';
 
 const CursorBlob = () => {
   const { isDesktop, hasMounted } = useMobileOptimization();
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
-  const animationRef = useRef<number | null>(null);
+
+  // Use Framer Motion's optimized animation system instead of custom RAF
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Smooth spring animations (integrated with Framer Motion's RAF)
+  const springX = useSpring(mouseX, { damping: 25, stiffness: 200 });
+  const springY = useSpring(mouseY, { damping: 25, stiffness: 200 });
 
   useEffect(() => {
     // Early return if not mounted or not desktop
     if (!hasMounted || !isDesktop) return;
 
-    let mouseX = 0;
-    let mouseY = 0;
-    let currentX = 0;
-    let currentY = 0;
-
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
       setIsVisible(true);
     };
 
@@ -29,26 +31,14 @@ const CursorBlob = () => {
       setIsVisible(false);
     };
 
-    const animate = () => {
-      currentX += (mouseX - currentX) * 0.1;
-      currentY += (mouseY - currentY) * 0.1;
-
-      setPosition({ x: currentX, y: currentY });
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseleave', handleMouseLeave);
-    animationRef.current = requestAnimationFrame(animate);
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
     };
-  }, [isDesktop, hasMounted]);
+  }, [isDesktop, hasMounted, mouseX, mouseY]);
 
   // Return null until client detection is complete
   if (!hasMounted || !isDesktop) {
@@ -56,19 +46,32 @@ const CursorBlob = () => {
   }
 
   return (
-    <div
-      className={`fixed top-0 left-0 w-8 h-8 pointer-events-none z-50 transition-opacity duration-300 ${
-        isVisible ? 'opacity-100' : 'opacity-0'
-      }`}
+    <motion.div
+      className="fixed top-0 left-0 w-8 h-8 pointer-events-none z-50"
       style={{
-        transform: `translate(${position.x - 16}px, ${position.y - 16}px)`,
-        background:
-          'radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(6, 182, 212, 0.2) 100%)',
-        borderRadius: '50%',
-        filter: 'blur(8px)',
-        mixBlendMode: 'screen',
+        x: springX,
+        y: springY,
+        translateX: '-50%',
+        translateY: '-50%',
       }}
-    />
+      animate={{
+        opacity: isVisible ? 1 : 0,
+      }}
+      transition={{
+        opacity: { duration: 0.3 }
+      }}
+    >
+      <div
+        className="w-full h-full"
+        style={{
+          background:
+            'radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(6, 182, 212, 0.2) 100%)',
+          borderRadius: '50%',
+          filter: 'blur(8px)',
+          mixBlendMode: 'screen',
+        }}
+      />
+    </motion.div>
   );
 };
 
