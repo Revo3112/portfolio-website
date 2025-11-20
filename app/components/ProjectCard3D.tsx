@@ -24,6 +24,7 @@ const ProjectCard3D: React.FC<ProjectCard3DProps> = ({ project, index }) => {
   const { isMobile, isDesktop, shouldReduceEffects, hasMounted } = useMobileOptimization();
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   // Mouse position values - Only for desktop
   const mouseX = useMotionValue(0);
@@ -103,13 +104,23 @@ const ProjectCard3D: React.FC<ProjectCard3DProps> = ({ project, index }) => {
           {/* Image Container */}
           <div className="relative h-48 mb-6 rounded-xl overflow-hidden transform-style-3d">
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
+            {!imageError ? (
+              <Image
+                src={project.image}
+                alt={project.title}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                onError={() => setImageError(true)}
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-purple-500/20 to-cyan-500/20 flex items-center justify-center">
+                <div className="text-center p-4">
+                  <div className="text-6xl mb-2">📁</div>
+                  <p className="text-sm text-gray-400">Project Image</p>
+                </div>
+              </div>
+            )}
 
             {/* Floating Tech Tags */}
             <div className="absolute bottom-3 left-3 z-20 flex flex-wrap gap-2 transform-style-3d translate-z-20">

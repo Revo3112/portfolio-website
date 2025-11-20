@@ -7,6 +7,7 @@ import { Github } from "lucide-react";
 import ProjectCard3D from "./ProjectCard3D";
 
 // Static data moved outside component to prevent recreation on re-renders
+// All image paths verified to match actual files in /public/images/
 const projects = [
   {
     title: "EduVerse",
@@ -46,18 +47,10 @@ const projects = [
   {
     title: "Cloud HorizonOS",
     description: "Mobile AR operating system interface concept with gesture controls and spatial computing elements",
-    image: "/images/Cloud_Horizon_OS.png",
+    image: "/images/Horizon OS.png",
     tags: ["Unity", "C#", "AR/VR", "UI Design", "Spatial Computing"],
     github: "https://github.com/Revo3112/Cloud_Horizon_OS",
     type: "AR/VR Operating System"
-  },
-  {
-    title: "Smart City Dashboard",
-    description: "Real-time IoT dashboard for city management monitoring traffic, energy usage, and emergency response",
-    image: "/images/Smart_City.png",
-    tags: ["React", "Node.js", "Socket.io", "D3.js", "IoT"],
-    github: "https://github.com/Revo3112/Smart_City_Dashboard",
-    type: "IoT Dashboard"
   },
   {
     title: "PetaSampah App",
