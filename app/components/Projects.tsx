@@ -15,6 +15,7 @@ const projects = [
     image: "/images/Eduverse_logo.png",
     tags: ["Blockchain", "React Native", "Next.js", "Solidity", "Web3"],
     github: "https://github.com/Revo3112/EduVerse",
+    live: "https://edu-verse-blond.vercel.app/",
     featured: true,
     type: "Blockchain Education Platform"
   },
